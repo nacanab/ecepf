@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %} {{room.name}} | {% endblock title %}
+
+{% block content %}
+
+<style>
+    @media (max-width: 760px) {
+        .chat-messages {
+            height: 200px;
+        }
+        #div-discussion{
+            margin-top: 120px;
+        }
+        h3{
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            font-style: normal;
+        }
+    }
+
+
+</style>
+ <div class="p-5 text-center">
+
+    <h3 class="lg:text-6xl text-white">Groupe: {{ room.name }}</h3>
+ </div>
+
+ <div class=" flex flex-wrap w-full " id="div-discussion">
+
+
+
+    <div class="w-full md:w-1/3 lg:mx-auto p-4 bg-white rounded xl">
+
+        <form class="">
+
+            <div>
+                <textarea name="content" id="editor"></textarea>
+
+            </div>
+
+            <!-- <input type="text" name="content" class="flex-1 mr-3" placeholder="Votre message ici..." id="chat-message-input"> -->
+
+            <button  class="px-5 py-3 rounded-xl text-white bg-teal-600 hover: bg-teal-700" id="chat-message-submit">
+                Envoyer
+            </button>
+        </form>
+
+    </div>
+
+
+    <div class="w-full md:w-2/3 lg:mx-auto p-4 bg-white rounded-xl">
+
+        <div class="chat-messages space-y-3" id="chat-messages">
+            {% for message in messages %}
+            <div class="p-4 bg-gray-200 rounded-xl">
+
+                <p class="font-semibold"> {{message.user.username}} </p>
+                <p> {{ message.content|safe }} </p>
+
+            </div>
+
+            {% endfor %}
+            
+
+        </div>
+
+    </div> 
+        
+ </div>
+
+
+{% endblock content %}
+
+
+
+{% block scripts %}
+
+{{ room.slug|json_script:"json-roomname" }}
+{{ request.user.username|json_script:"json-username"}}
+
+<script>
+    CKEDITOR.replace('editor', {
+        height: '60px'
+    });
+    let editor = CKEDITOR.instances.editor;
+    let roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+    let userName = JSON.parse(document.getElementById('json-username').textContent);
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host 
+        + '/ws/'
+        + roomName
+        + '/'
+    ); 
+
+    chatSocket.onmessage = function(response){
+        console.log('onmessage');
+        let data = JSON.parse(response.data);
+
+        if(data.message){
+
+            let html = ` <div class="p-4 bg-gray-200 rounded-xl">
+                            <p class="font-semibold"> ${data.username} </p>
+                            <p>${data.message}</p>
+                            </div>`
+
+            document.querySelector("#chat-messages").innerHTML += html;
+            
+            scrollToBottom();
+
+        }else{
+            alert('Message vide!');
+        }
+    }
+
+    chatSocket.onclose = function(e){
+        console.log('onclose');
+    }
+
+    // evenement sur le click 'envoyer'
+
+    document.querySelector("#chat-message-submit").onclick = function(e){
+        e.preventDefault();
+        // let messageInput = document.querySelector('#chat-message-input');
+        // let message = messageInput.value;
+        let message = editor.getData();
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }))
+
+        // messageInput.value = '';
+        editor.setData('');
+
+        return false;
+    }
+
+    // scrolling 
+
+    function scrollToBottom(){
+        const objDiv = document.querySelector("#chat-messages");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+
+    scrollToBottom();
+
+</script>
+
+{% endblock scripts %}

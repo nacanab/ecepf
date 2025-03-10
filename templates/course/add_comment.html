@@ -1,0 +1,9 @@
+<!-- add_comment.html -->
+<h2>Ajouter un commaentaire/h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Valider</button>
+</form>
+
+<a href="{% if upload %}{% url 'upload_detail' upload.id %}{% else %}{% url 'video_detail' video.id %}{% endif %}">Back</a>

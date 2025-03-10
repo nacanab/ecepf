@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #eef2f7;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .container1 {
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    #form1 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .button {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .button:hover {
+        background: linear-gradient(135deg, #5a4cd1, #8c82f8);
+    }
+</style>
+{% include 'snippets/messages.html' %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <!-- Champ pour le titre de l'examen -->
+    <div class="form-group">
+        <label for="{{ form.title.id_for_label }}">Titre de l'examen</label>
+        {{ form.title }}
+        {% if form.title.errors %}
+            <div class="text-danger">
+                {{ form.title.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour la description de l'examen -->
+    <div class="form-group">
+        <label for="{{ form.description.id_for_label }}">Description</label>
+        {{ form.description }}
+        {% if form.description.errors %}
+            <div class="text-danger">
+                {{ form.description.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour la date de l'examen -->
+    <div class="form-group">
+        <label for="{{ form.date.id_for_label }}">Date de l'examen</label>
+        {{ form.date }}
+        {% if form.date.errors %}
+            <div class="text-danger">
+                {{ form.date.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour la durée de l'examen -->
+    <div class="form-group">
+        <label for="{{ form.duration.id_for_label }}">Durée (en minutes)</label>
+        {{ form.duration }}
+        {% if form.duration.errors %}
+            <div class="text-danger">
+                {{ form.duration.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour le score maximum -->
+    <div class="form-group">
+        <label for="{{ form.max_score.id_for_label }}">Score maximum</label>
+        {{ form.max_score }}
+        {% if form.max_score.errors %}
+            <div class="text-danger">
+                {{ form.max_score.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour le score de passage -->
+    <div class="form-group">
+        <label for="{{ form.pass_mark.id_for_label }}">Score de passage</label>
+        {{ form.pass_mark }}
+        {% if form.pass_mark.errors %}
+            <div class="text-danger">
+                {{ form.pass_mark.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour le fichier d'examen -->
+    <div class="form-group">
+        <label for="{{ form.file.id_for_label }}">Fichier d'examen</label>
+        {{ form.file }}
+        {% if form.file.errors %}
+            <div class="text-danger">
+                {{ form.file.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour sélectionner les cours associés -->
+    <div class="form-group">
+        <label for="{{ form.courses.id_for_label }}">Cours associés</label>
+        {{ form.courses }}
+        {% if form.courses.errors %}
+            <div class="text-danger">
+                {{ form.courses.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+
+{% endblock %}
+

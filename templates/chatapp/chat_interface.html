@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Interface{% endblock %}
+
+{% block content %}
+<div class="flex h-screen">
+    <!-- Liste des étudiants -->
+    <div class="w-1/4 bg-gray-100 p-4 overflow-y-auto">
+        <h3 class="text-lg font-bold mb-4">Étudiants</h3>
+        <ul>
+            {% for student in students %}
+                <li class="mb-2">
+                    <button onclick="loadChat({{ student.id }})" class="flex items-center p-2 w-full text-left hover:bg-gray-200 rounded">
+                        <img src="{{ student.profile_picture.url }}" alt="Profile" class="w-8 h-8 rounded-full mr-2">
+                        <span>Étudiant #{{ student.id }}</span>
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Zone de chat -->
+    <div class="w-3/4 bg-white p-4 flex flex-col">
+        <div id="chat-messages" class="flex-1 overflow-y-auto mb-4 border p-4 rounded-lg"></div>
+        <div class="flex">
+            <input type="text" id="chat-input" placeholder="Type a message..." class="flex-1 p-2 border rounded-l">
+            <input type="file" id="file-input" class="hidden">
+            <label for="file-input" class="p-2 bg-gray-200 cursor-pointer">📎</label>
+            <button onclick="sendMessage()" class="p-2 bg-blue-500 text-white rounded-r">Send</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentReceiverId = null;
+
+    // Charger les messages avec un étudiant
+    function loadChat(receiverId) {
+        currentReceiverId = receiverId;
+        fetch(`/get_messages/${receiverId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const chatMessages = document.getElementById('chat-messages');
+                chatMessages.innerHTML = '';
+                data.messages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = message.sender === '{{ request.user.student.id }}' ? 'text-right mb-2' : 'text-left mb-2';
+                    messageElement.innerHTML = `
+                        <div class="inline-block p-2 rounded-lg ${message.sender === '{{ request.user.student.id }}' ? 'bg-blue-500 text-white' : 'bg-gray-200'}">
+                            ${message.content}
+                            ${message.file_url ? `<br><a href="${message.file_url}" class="text-sm text-blue-300">Download file</a>` : ''}
+                        </div>
+                    `;
+                    chatMessages.appendChild(messageElement);
+                });
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Faire défiler vers le bas
+            });
+    }
+
+    // Envoyer un message
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const fileInput = document.getElementById('file-input');
+        const formData = new FormData();
+        formData.append('receiver_id', currentReceiverId);
+        formData.append('content', input.value);
+        if (fileInput.files[0]) {
+            formData.append('file', fileInput.files[0]);
+        }
+
+        fetch('/send_message/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'Message sent.') {
+                input.value = ''; // Effacer le champ de saisie
+                fileInput.value = ''; // Effacer le champ de fichier
+                loadChat(currentReceiverId); // Recharger les messages
+            }
+        });
+    }
+</script>
+{% endblock %}

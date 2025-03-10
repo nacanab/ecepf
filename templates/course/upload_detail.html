@@ -1,0 +1,14 @@
+<h2>{{ upload.title }}</h2>
+<p>{{ upload.summary }}</p>
+
+<h3>Comments</h3>
+<ul>
+    {% for comment in upload.comments.all %}
+        <li>
+            <strong>{{ comment.user.username }}</strong> - {{ comment.timestamp }}
+            <p>{{ comment.content }}</p>
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'add_comment_to_upload' upload.id %}">Add a comment</a>

@@ -1,0 +1,230 @@
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'Incription | eCEP' %}{% endblock title %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(to right, #007bff, #6610f2);
+    }
+
+    .card {
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.02);
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="bg-gradient text-light p-3 mb-5 rounded">
+        <h1 class="lead my-0" style="color:#007bff;">
+            <i class="fas fa-lock me-2"></i>{% trans 'Créer un compte' %}
+        </h1>
+    </div>
+    {% include 'snippets/messages.html' %}
+    <form action="" method="POST" id="login-form" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h1 class="lead p-0 m-0"><i class="fas fa-user me-2"></i>{% trans 'Informations de connexion' %}</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="username_id" class="form-label">{{ form.username.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                {{ form.username }}
+                            </div>
+                            <div id="username-message" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email_id" class="form-label">{{ form.email.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-envelope"></i></span>
+                                {{ form.email }}
+                            </div>
+                            <div id="email-message" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password1_id" class="form-label">{{ form.password1.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                {{ form.password1 }}
+                            </div>
+                            <div id="password1-message" class="form-text"></div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password2_id" class="form-label">{{ form.password2.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-lock"></i></span>
+                                {{ form.password2 }}
+                            </div>
+                            <div id="password2-message" class="form-text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h1 class="lead p-0 m-0"><i class="fas fa-info-circle me-2"></i>{% trans 'Informations personnelles' %}</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="address_id" class="form-label">{{ form.address.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-home"></i></span>
+                                {{ form.address }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone_id" class="form-label">{{ form.phone.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-phone"></i></span>
+                                {{ form.phone }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="first_name_id" class="form-label">{{ form.first_name.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                {{ form.first_name }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name_id" class="form-label">{{ form.last_name.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-user"></i></span>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender_id" class="form-label">{{ form.student.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-venus-mars"></i></span>
+                                {{ form.student }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="program_id" class="form-label">{{ form.relation_ship.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-book"></i></span>
+                                {{ form.relation_ship }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="program_id" class="form-label">{{ form.student_password.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-book"></i></span>
+                                {{ form.student_password }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-circle"></i>{% trans 'Invalid ID & Password.' %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success w-100" id="login-btn">
+            <i class="fas fa-sign-in-alt"></i><small>{% trans 'Créer un compte' %}</small>
+        </button>
+    </form>
+    <br>
+    <div class="text-center">
+        <span>{% trans 'Avez-vous déjà un compte?' %}</span>
+        <a href="{% url 'login' %}" class="link">{% trans 'Se connecter' %}</a>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    const loginFormEl = document.getElementById('login-form');
+    const loginBtnEl = document.getElementById('login-btn');
+
+    loginFormEl.addEventListener('submit', () => {
+        loginBtnEl.innerHTML = '<i class="fas fa-sign-in-alt"></i> Signing you in . . .';
+        loginBtnEl.classList.add("disabled");
+    });
+
+    $("#username_id").on("input", function () {
+        const username = $(this).val();
+
+        $.ajax({
+            url: "/accounts/ajax/validate-username/",
+            data: {
+                username: username
+            },
+            dataType: 'json',
+            success: function (data) {
+                const usernameMessage = $('#username-message');
+                if (data.is_taken) {
+                    usernameMessage.html(`<span class="text-danger"><b>${username}</b> is already taken. Please try another one.</span>`);
+                } else {
+                    usernameMessage.html(`<span class="text-success"><b>${username}</b> is available.</span>`);
+                }
+            }
+        });
+    });
+
+    $("#email_id").on("input", function () {
+        const email = $(this).val();
+        const emailMessage = $('#email-message');
+
+        if (email.includes('@')) {
+            emailMessage.html(`<span class="text-success">Valid email address.</span>`);
+        } else {
+            emailMessage.html(`<span class="text-danger">Please enter a valid email address.</span>`);
+        }
+    });
+
+    $("#password1_id").on("input", function () {
+        const password1 = $(this).val();
+        const password1Message = $('#password1-message');
+
+        if (password1.length >= 8) {
+            password1Message.html(`<span class="text-success">Strong password.</span>`);
+        } else {
+            password1Message.html(`<span class="text-danger">Password must be at least 8 characters long.</span>`);
+        }
+    });
+
+    $("#password2_id").on("input", function () {
+        const password2 = $(this).val();
+        const password1 = $("#password1_id").val();
+        const password2Message = $('#password2-message');
+
+        if (password2 === password1) {
+            password2Message.html(`<span class="text-success">Passwords match.</span>`);
+        } else {
+            password2Message.html(`<span class="text-danger">Passwords do not match.</span>`);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% include 'snippets/messages.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h1 class="display-4 text-primary font-weight-bold">{{ examen.title }}</h1>
+        <p class="lead text-muted">{{ examen.description }}</p>
+            {% if examen.file %}
+        <p>
+        <a href="{{ examen.file.url }}" download>Télécharger le fichier d'examen</a>
+        </p>
+        {% else %}
+        <p>Aucun fichier d'examen disponible.</p>
+        {% endif %}
+    </div>
+
+    <form method="post" class="exam-form shadow-lg rounded p-4 bg-light">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div class="question mb-4 p-4 border rounded bg-white shadow-sm">
+                <h3 class="question-content text-dark font-weight-bold mb-3">{{ question.content }}</h3>
+
+                {% if question.question_type == "multiple_choice" %}
+                    <!-- Question à choix multiples -->
+                    <div class="form-check">
+                        {% for reponse in question.reponses.all %}
+                            <label class="form-check-label custom-radio-label">
+                                <input class="form-check-input custom-radio" type="radio" name="question_{{ question.id }}" value="{{ reponse.id }}">
+                                <span class="custom-radio-text">{{ reponse.content }}</span>
+                            </label><br>
+                        {% endfor %}
+                    </div>
+
+                {% elif question.question_type == "true_false" %}
+                    <!-- Question vrai/faux -->
+                    <div class="form-check">
+                        <label class="form-check-label custom-radio-label">
+                            <input class="form-check-input custom-radio" type="radio" name="question_{{ question.id }}" value="True">
+                            <span class="custom-radio-text">Vrai</span>
+                        </label><br>
+                        <label class="form-check-label custom-radio-label">
+                            <input class="form-check-input custom-radio" type="radio" name="question_{{ question.id }}" value="False">
+                            <span class="custom-radio-text">Faux</span>
+                        </label><br>
+                    </div>
+
+                {% elif question.question_type == "short_answer" %}
+                    <!-- Question à réponse courte -->
+                    <input class="form-control custom-input" type="text" name="question_{{ question.id }}" placeholder="Entrez votre réponse" required>
+                {% endif %}
+            </div>
+            <hr class="my-5">
+        {% endfor %}
+        
+        <div class="text-center">
+            <button type="submit" class="btn btn-lg btn-success custom-submit-btn">Soumettre</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    .exam-form {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-content {
+        font-size: 1.25rem;
+        color: #343a40;
+        line-height: 1.6;
+    }
+
+    .question {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-check-label {
+        font-size: 1.1rem;
+        color: #495057;
+    }
+
+    .form-check-input {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .custom-radio-label {
+        padding-left: 10px;
+        font-size: 1.1rem;
+    }
+
+    .custom-radio-text {
+        font-size: 1.1rem;
+    }
+
+    .custom-radio {
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .custom-input {
+        font-size: 1.1rem;
+        padding: 12px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-submit-btn {
+        font-size: 1.2rem;
+        padding: 10px 30px;
+        background-color: #28a745;
+        border-color: #28a745;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .custom-submit-btn:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        transform: translateY(-2px);
+    }
+
+    .form-check-label:hover {
+        color: #007bff;
+    }
+
+    .form-check-input:checked + .custom-radio-label {
+        color: #28a745;
+    }
+
+    .question:hover {
+        background-color: #f1f1f1;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-content {
+        transition: color 0.3s ease;
+    }
+
+    .question:hover .question-content {
+        color: #007bff;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    /* styles.css */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    tbody a:hover {
+        text-decoration: underline;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% include 'snippets/messages.html' %}
+<h1>Liste des examens</h1>
+{% if user.is_superuser %}
+<a href="{% url 'examen_create' %}" class="button">Créer un nouvel examen</a>
+
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Durée (minutes)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for examen in examens %}
+        <tr>
+            <td>{{ examen.title }}</td>
+            <td>{{ examen.description }}</td>
+            <td>{{ examen.date }}</td>
+            <td>{{ examen.duration }}</td>
+            <td>
+                {% if user.is_student %}
+                    {% if examen.is_active%}
+                        <a href="{% url 'take_examen' examen.slug %}">Passer</a>
+                    {% else %}
+                        <span>Examen non disponible</span>
+                    {% endif %}
+                {% elif user.is_lecturer %}
+                <a href="{% url 'examen_detail' examen.slug %}">Détails</a>
+                {% else %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'examen_detail' examen.slug %}">Détails</a></li>
+                          <li><a href="{% url 'examen_update' examen.slug %}">Modifier</a></li>
+                          <li><a href="{% url 'examen_delete' examen.slug %}">Supprimer</a></li>
+                          <li><a href="{% url 'examen_activation' examen.id %}" class="btn btn-warning">
+                            {% if examen.is_active %}
+                                Désactiver l'examen
+                            {% else %}
+                                Activer l'examen
+                            {% endif %}
+                        </a></li>
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

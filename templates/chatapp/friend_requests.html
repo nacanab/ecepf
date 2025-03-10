@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Demandes d'ami reçues</h1>
+    <div class="list-group">
+        {% for request in received_requests %}
+        <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5>{{ request.from_user.username }}</h5>
+                    <small>{{ request.created_at }}</small>
+                </div>
+                <div>
+                    <a href="{% url 'accept_friend_request' request.id %}" class="btn btn-success btn-sm">Accepter</a>
+                    <a href="#" class="btn btn-danger btn-sm">Refuser</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucune demande d'ami pour le moment.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

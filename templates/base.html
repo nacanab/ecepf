@@ -1,0 +1,117 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>{% block title %}DjangoSMS{% endblock title %}</title>
+
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+
+    <!-- Fontawesome icons -->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/fontawesome-6.5.1/css/all.min.css' %}">
+
+    <!-- Bootstrap5 -->
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap-5.3.2/css/bootstrap.min.css' %}">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}">
+
+
+    <!-- <script src="https://js.stripe.com/v3/"></script> -->
+    {% block header %}{% endblock %}
+</head>
+
+<body>
+    {% block sidebar %}
+        {% include 'sidebar.html' %}
+    {% endblock %}
+
+    {% block maincontent %}
+    <div id="main">
+        {% block topbar %}
+            {% include 'navbar.html' %}
+        {% endblock %}
+
+        <div class="container-fluid" id="main-content">
+            {% block content %}{% endblock content %}
+        </div>
+
+    </div>
+    {% endblock %}
+    <script src="{% url 'javascript-catalog' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/jquery-3.7.1/jquery-3.7.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vendor/bootstrap-5.3.2/js/bootstrap.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+    {% block js %}
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging.js";
+ 
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBz3-DmhiHtNRrPy2bjtMWeVPs1qASY3jc",
+      authDomain: "ecep-f1dc4.firebaseapp.com",
+      projectId: "ecep-f1dc4",
+      storageBucket: "ecep-f1dc4.firebasestorage.app",
+      messagingSenderId: "3285729809",
+      appId: "1:3285729809:web:8ccc6c233060d8392767b0",
+      measurementId: "G-PJCYNKLVV2"
+    };
+ 
+    // Initialiser Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+  
+    
+
+    // Fonction pour demander le token
+    function requestNotificationPermission() {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          // Récupérer le token uniquement si la permission est accordée
+          getToken(messaging, { vapidKey: "BOv99hH93VE_ElTf7OWA7Wk0hyQ6wosG-tqi3aeQqwx2DRecgPkrvvTd11GG1rRXVKRCE7dW4JSdk7RCopXMc0c" })
+            .then((token) => {
+              console.log("Token Firebase :", token);
+              // Envoyer le token au backend Django
+              fetch('/accounts/save-firebase-token/', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: `firebase_token=${token}`
+              })
+              .then(response => response.json())
+              .then(data => console.log(data));
+            })
+            .catch((error) => {
+              console.error("Erreur lors de la récupération du token :", error);
+            });
+        } else {
+          console.log("Permission de notification refusée");
+          // Vous pouvez ajouter un message pour informer l'utilisateur
+        }
+      });
+    }
+
+    requestNotificationPermission();
+    // Option 2: Si vous préférez ajouter le bouton directement à votre HTML
+    // et juste associer l'événement ici:
+    /*
+    document.addEventListener('DOMContentLoaded', () => {
+      const notificationButton = document.getElementById('enable-notifications');
+      if (notificationButton) {
+        notificationButton.addEventListener('click', requestNotificationPermission);
+      }
+    });
+    */
+</script>
+    {% endblock js %}
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}Profile étudiant | {% trans 'eCEP' %}{% endblock title %}
+
+{% block content %}
+
+<style>
+    .p1{
+        color: red;
+        font-size:20px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    }
+</style>
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Enseignant' %}</li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Etudiants' %}</li>
+    </ol>
+</nav>
+
+<!-- <div id="input-nav"><a href="{% url 'home' %}" class="primary1">Home</a> Students</div> -->
+
+<br>
+
+{% include 'snippets/messages.html' %}
+{% include 'snippets/filter_form.html' %}
+<div class="table-responsive table-shadow table-light table-striped m-0 mt-4">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>{% trans 'ID No.' %} </th>
+                <th> {% trans 'Full Name' %} </th>
+                <th> {% trans 'Email' %} </th>
+                {% if request.user.is_superuser %}
+                <th> {% trans 'Action' %} </th>
+                {% else %}
+                <th> {% trans 'Action' %} </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if count == 0 %}
+                <p class="p1">Pas encore d'étudiant assigné</p>
+            {% else %}
+                {% for student in students %}
+                <tr>
+                    <td> {{ forloop.counter }}.</td>
+                    <td>{{ student.student.username }} </td>
+                    <td><a href="{% url 'profile_single' student.student.id %}">{{ student.student.get_full_name }}</a>
+                    </td>
+                    <td>{{ student.student.email }} </td>
+
+                    {% if request.user.is_superuser %}
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'desasign_students' lecturer.user.id student.student.id %}">{% trans "desassiner l'etudiant" %}</a></li>
+                            <li><a class="dropdown-item" target="_blank" href="{% url 'profile_single' student.student.id %}?download_pdf=1">{% trans 'Download PDF' %}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="{% url 'student_edit' student.student.pk %}"><i class="unstyled me-2 fas fa-edit"></i>{% trans 'Mise à jour' %}</a></li>
+                              <li><a class="dropdown-item" target="_blank" href="{% url 'profil_etudiant' student.student.id %}?download_pdf=1"><i class="unstyled me-2 fas fa-download"></i>{% trans 'Télécharger PDF' %}</a></li>
+                              <li><a class="dropdown-item" href="{% url 'profil_etudiant' student.student.id %}"><i class="unstyled me-2 fas fa-user"></i>{% trans 'Profil etudiant' %}</a></li>
+                            </ul>
+                          </div>
+                    </td>
+                    {% endif %}
+                    
+                    {% empty %}
+                    <tr>
+                    <td colspan="6">
+                    <span class="text-danger">
+                        {% trans 'No Student.' %}
+                        {% if request.user.is_superuser %}
+                        <a href="{% url 'add_student' %}">
+                        <i class="primary" style="font-size: 22px;">
+                            {% trans 'Add Student Now.' %}
+                        </i>
+                        {% endif %}
+                        </a>
+                    </span>
+                    </td>
+                    </tr>
+
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+    <a href="{% url 'attribuer_badge'%}">Attribuer un badges</a>
+</div>
+{% endblock content %}

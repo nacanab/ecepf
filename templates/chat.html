@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ecep Chat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f0f2f5;
+            --message-sent: #d9fdd3;
+            --message-received: #ffffff;
+            --text-color: #111b21;
+            --online-indicator: #00a884;
+            --border-color: #e9edef;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #0b141a;
+            --secondary-bg: #1f2c33;
+            --message-sent: #005c4b;
+            --message-received: #202c33;
+            --text-color: #d1d7db;
+            --border-color: #2a3942;
+        }
+
+        [data-theme="blue"] {
+            --primary-bg: #d5e6ff;
+            --secondary-bg: #b3d1ff;
+            --message-sent: #0078ff;
+            --message-received: #ffffff;
+        }
+
+        body {
+            background: var(--secondary-bg);
+            color: var(--text-color);
+            height: 100vh;
+            margin: 0;
+        }
+
+        .chat-container {
+            height: 100vh;
+            display: flex;
+            background: var(--primary-bg);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 30%;
+            min-width: 300px;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-bar {
+            padding: 10px;
+            background: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .contact-item:hover {
+            background: var(--secondary-bg);
+        }
+
+        /* Chat Main Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px;
+            background: var(--secondary-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAAOUlEQVRoge3BMQ0AAAgDoJnc6FrEuhB8kQrkCgQCAxEREREREREREREREREREREREREREREREREREREREREReY4DxXQAASe3w1UAAAAASUVORK5CYII=');
+            background-size: contain;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            margin: 10px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            position: relative;
+            word-break: break-word;
+        }
+
+        .message.sent {
+            background: var(--message-sent);
+            margin-left: auto;
+        }
+
+        .message.received {
+            background: var(--message-received);
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.1);
+        }
+
+        .message-input {
+            padding: 15px;
+            background: var(--secondary-bg);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        min-width: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        background: var(--primary-bg);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .mobile-menu-btn {
+        display: block !important;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1001;
+        background: var(--secondary-bg);
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+    }
+
+    .mobile-menu-btn span {
+        display: block;
+        width: 25px;
+        height: 2px;
+        background: var(--text-color);
+        margin: 5px 0;
+        transition: 0.3s;
+    }
+
+    .chat-main {
+        width: 100% !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
+    .back-button {
+        display: block !important;
+        position: absolute;
+        left: 10px;
+        background: none;
+        border: none;
+        color: var(--text-color);
+    }
+
+    /* Animation du menu hamburger */
+    .active .mobile-menu-btn span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .active .mobile-menu-btn span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .active .mobile-menu-btn span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+}
+
+
+@media (max-width: 480px) {
+    .chat-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Sidebar mobile optimisé */
+    .sidebar {
+        width: 40px; 
+        left: -40%; /* Décalé de sa propre largeur */
+        box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Ajout d'une ombre portée */
+    }
+    .sidebar.active {
+        left: 0;
+    }
+
+    /* Ajout d'un overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 40%;
+        background: rgba(0,0,0,0.3);
+        z-index: 999;
+    }
+
+    .sidebar.active + .sidebar-overlay {
+        display: block;
+    }
+
+    /* Bouton hamburger */
+    .mobile-menu-btn {
+        display: block !important;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1001;
+        background: var(--secondary-bg);
+        border: none;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    .mobile-menu-btn span {
+        display: block;
+        width: 25px;
+        height: 2px;
+        background: var(--text-color);
+        margin: 5px 0;
+        transition: 0.3s;
+    }
+
+    /* État actif du menu */
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* En-tête optimisé */
+    .chat-header {
+        padding: 8px;
+        position: relative;
+    }
+
+    /* Zone de message */
+    .message-input {
+        padding: 8px;
+        gap: 5px;
+    }
+
+    .message-input .btn {
+        padding: 8px;
+    }
+
+    /* Bulles de message */
+    .message-bubble {
+        max-width: 85%;
+        font-size: 0.85em;
+        padding: 6px 10px;
+    }
+
+    /* Thème switcher compact */
+    .theme-switcher {
+        top: 5px;
+        right: 5px;
+    }
+
+    .theme-switcher .form-select {
+        padding: 4px 20px 4px 8px;
+        font-size: 0.75em;
+        width: 110px;
+    }
+
+    /* Cacher éléments secondaires */
+    .contact-item small {
+        display: none;
+    }
+
+    .contact-item h6 {
+        font-size: 0.9em;
+    }
+
+    /* Ajustement des images */
+    .contact-item img {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .emoji-picker {
+        width: 100%;
+        max-height: 200px;
+    }
+    
+    .emoji-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+   
+}
+
+.emoji-category-title {
+    grid-column: 1 / -1;
+    font-size: 0.8em;
+    color: var(--text-color);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 5px;
+}
+
+.emoji-picker {
+    width: 320px;
+    max-height: 300px;
+}
+
+.emoji-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
+    padding: 12px;
+}
+
+
+
+
+.emoji-picker {
+    position: absolute;
+    bottom: 60px;
+    left: 10px;
+    background: var(--primary-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+
+
+.emoji {
+    cursor: pointer;
+    padding: 5px;
+    font-size: 1.4em;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.emoji:hover {
+    transform: scale(1.2);
+    background: var(--secondary-bg);
+    border-radius: 4px;
+}
+
+
+    </style>
+</head>
+
+<body>
+    
+    <button class="mobile-menu-btn d-none" id="mobileMenuBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="search-bar">
+                <input type="text" class="form-control" placeholder="Rechercher un contact..." id="searchInput">
+            </div>
+            <div class="contacts-list" id="contactsList">
+                <!-- Contacts dynamiques -->
+                {% for friend in friends %}
+                <div class="contact-item" data-userid="{{ friend.id }}" data-username="{{ friend.username }}">
+                    <div class="position-relative">
+                        <img src="{{ friend.profile_picture.url|default:'/static/default-profile.png' }}" 
+                             class="rounded-circle" 
+                             width="45" 
+                             height="45">
+                        {% if friend.chat_profile.is_online %}
+                        <span class="online-dot"></span>
+                        {% endif %}
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0">{{ friend.get_full_name }}</h6>
+                        <small class="text-muted">
+                            {% if friend.chat_profile.is_online %}
+                            En ligne
+                            {% else %}
+                            Dernière connexion {{ friend.chat_profile.last_activity|timesince }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Chat Main Area -->
+        <div class="chat-main" id="chatMain">
+            <button class="btn btn-light back-button d-none" id="backButton">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            
+            <div class="theme-switcher">
+                <select class="form-select" id="themeSelect">
+                    <option value="light">Thème clair</option>
+                    <option value="dark">Thème sombre</option>
+                    <option value="blue">Thème bleu</option>
+                </select>
+            </div>
+
+            <div class="chat-header">
+                <img id="currentFriendAvatar" class="rounded-circle" width="45" height="45">
+                <div>
+                    <h6 class="mb-0" id="currentFriendName"></h6>
+                    <small class="text-muted" id="currentFriendStatus"></small>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer"></div>
+
+            <div class="message-input">
+                <!-- Sélecteur d'émojis/stickers -->
+                <button class="btn btn-light" id="emojiButton">
+                    <i class="fas fa-smile"></i>
+                </button>
+                
+                <!-- Input fichier caché -->
+                <input type="file" id="fileInput" hidden>
+                <button class="btn btn-light" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+            
+                <!-- Champ de saisie -->
+                <input type="text" 
+                       class="form-control" 
+                       id="messageInput" 
+                       placeholder="Écrire un message..."
+                       onkeypress="handleEnter(event)">
+            
+                <!-- Bouton d'envoi -->
+                <button class="btn btn-primary" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            
+                <!-- Conteneur émojis/stickers -->
+                <div class="emoji-picker" id="emojiPicker">
+                    <div class="emoji-grid">
+                        <!-- Smileys et émotions -->
+                        <span class="emoji">😀</span><span class="emoji">😃</span><span class="emoji">😄</span>
+                        <span class="emoji">😁</span><span class="emoji">😆</span><span class="emoji">🥹</span>
+                        <span class="emoji">😅</span><span class="emoji">😂</span><span class="emoji">🤣</span>
+                        <span class="emoji">☺️</span><span class="emoji">😊</span><span class="emoji">😇</span>
+                        <span class="emoji">🙂</span><span class="emoji">🙃</span><span class="emoji">😉</span>
+                        <span class="emoji">😌</span><span class="emoji">😍</span><span class="emoji">🥰</span>
+                        <span class="emoji">😘</span><span class="emoji">😗</span><span class="emoji">😙</span>
+                        <span class="emoji">😚</span><span class="emoji">😋</span><span class="emoji">😛</span>
+                        <span class="emoji">😝</span><span class="emoji">😜</span><span class="emoji">🤪</span>
+                        
+                        <!-- Gestes et personnes -->
+                        <span class="emoji">🤨</span><span class="emoji">🧐</span><span class="emoji">🤓</span>
+                        <span class="emoji">😎</span><span class="emoji">🥸</span><span class="emoji">🤩</span>
+                        <span class="emoji">🥳</span><span class="emoji">😏</span><span class="emoji">😒</span>
+                        <span class="emoji">😞</span><span class="emoji">😔</span><span class="emoji">😟</span>
+                        <span class="emoji">😕</span><span class="emoji">🙁</span><span class="emoji">☹️</span>
+                        <span class="emoji">😣</span><span class="emoji">😖</span><span class="emoji">😫</span>
+                        
+                        <!-- Animaux et nature -->
+                        <span class="emoji">🐶</span><span class="emoji">🐱</span><span class="emoji">🐭</span>
+                        <span class="emoji">🐹</span><span class="emoji">🐰</span><span class="emoji">🦊</span>
+                        <span class="emoji">🐻</span><span class="emoji">🐼</span><span class="emoji">🐨</span>
+                        <span class="emoji">🐯</span><span class="emoji">🦁</span><span class="emoji">🐮</span>
+                        <span class="emoji">🐷</span><span class="emoji">🐸</span><span class="emoji">🐲</span>
+                        
+                        <!-- Nourriture et boissons -->
+                        <span class="emoji">🍎</span><span class="emoji">🍐</span><span class="emoji">🍊</span>
+                        <span class="emoji">🍋</span><span class="emoji">🍌</span><span class="emoji">🍉</span>
+                        <span class="emoji">🍇</span><span class="emoji">🍓</span><span class="emoji">🫐</span>
+                        <span class="emoji">🍈</span><span class="emoji">🍒</span><span class="emoji">🍑</span>
+                        
+                        <!-- Activités et sports -->
+                        <span class="emoji">⚽</span><span class="emoji">🏀</span><span class="emoji">🏈</span>
+                        <span class="emoji">🎾</span><span class="emoji">🏐</span><span class="emoji">🎱</span>
+                        <span class="emoji">🏓</span><span class="emoji">🏸</span><span class="emoji">🥊</span>
+                        
+                        <!-- Voyages et lieux -->
+                        <span class="emoji">🌍</span><span class="emoji">🌎</span><span class="emoji">🌏</span>
+                        <span class="emoji">🗺️</span><span class="emoji">🏔️</span><span class="emoji">⛰️</span>
+                        <span class="emoji">🌋</span><span class="emoji">🏕️</span><span class="emoji">🏖️</span>
+                        
+                        <!-- Objets et symboles -->
+                        <span class="emoji">💡</span><span class="emoji">🔦</span><span class="emoji">🕯️</span>
+                        <span class="emoji">💣</span><span class="emoji">🛎️</span><span class="emoji">🔔</span>
+                        <span class="emoji">🎁</span><span class="emoji">🎈</span><span class="emoji">🎀</span>
+                        
+                        <!-- Cœurs et émotions -->
+                        <span class="emoji">❤️</span><span class="emoji">🧡</span><span class="emoji">💛</span>
+                        <span class="emoji">💚</span><span class="emoji">💙</span><span class="emoji">💜</span>
+                        <span class="emoji">🤎</span><span class="emoji">🖤</span><span class="emoji">🤍</span>
+                        
+                        <!-- Éléments naturels -->
+                        <span class="emoji">🔥</span><span class="emoji">💧</span><span class="emoji">🌊</span>
+                        <span class="emoji">☀️</span><span class="emoji">🌙</span><span class="emoji">⭐</span>
+                        <span class="emoji">🌟</span><span class="emoji">💫</span><span class="emoji">✨</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Gestion des thèmes
+        const savedTheme = localStorage.getItem('chatTheme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        $('#themeSelect').val(savedTheme);
+
+        $('#themeSelect').change(function() {
+            const theme = $(this).val();
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('chatTheme', theme);
+        });
+
+        // Recherche de contacts
+        $('#searchInput').on('input', function() {
+            const searchTerm = $(this).val().toLowerCase();
+            $('.contact-item').each(function() {
+                const username = $(this).data('username').toLowerCase();
+                $(this).toggle(username.includes(searchTerm));
+            });
+        });
+
+        // Gestion responsive
+        $('#backButton').click(() => {
+            $('#chatMain').removeClass('active-chat');
+        });
+
+        $('.contact-item').click(function() {
+            if (window.innerWidth <= 768) {
+                $('#chatMain').addClass('active-chat');
+            }
+            // Charger les messages ici
+        });
+
+        // Envoi avec Enter
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                $('#sendButton').click();
+            }
+        }
+
+        // WebSocket et logique de chat existante...
+
+        // Gestion du menu mobile
+const mobileMenuBtn = $('#mobileMenuBtn');
+const sidebar = $('.sidebar');
+
+mobileMenuBtn.click(() => {
+    sidebar.toggleClass('active');
+    mobileMenuBtn.toggleClass('active');
+});
+
+// Fermer le menu en cliquant à l'extérieur
+$(document).click((e) => {
+    if (window.innerWidth <= 768 && 
+        !$(e.target).closest('.sidebar, #mobileMenuBtn').length) {
+        sidebar.removeClass('active');
+        mobileMenuBtn.removeClass('active');
+    }
+});
+
+// Adaptation dynamique au redimensionnement
+$(window).resize(() => {
+    if (window.innerWidth > 768) {
+        sidebar.removeClass('active');  // Fermer le menu
+        mobileMenuBtn.removeClass('active');
+    }
+});
+
+
+// Gestion des émojis
+// Gestion du picker d'émojis
+const emojiButton = $('#emojiButton');
+const emojiPicker = $('#emojiPicker');
+
+emojiButton.click((e) => {
+    e.stopPropagation();
+    emojiPicker.toggle();
+});
+
+// Fermer le picker quand on clique ailleurs
+$(document).click(() => emojiPicker.hide());
+
+// Insertion d'émoji
+$('.emoji').click(function() {
+    const emoji = $(this).text();
+    const input = $('#messageInput');
+    input.val(input.val() + emoji);
+    input.focus();
+});
+
+// Empêcher la fermeture quand on clique dans le picker
+emojiPicker.click(e => e.stopPropagation());
+
+    </script>
+</body>
+</html>

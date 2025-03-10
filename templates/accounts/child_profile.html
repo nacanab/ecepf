@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}Profil enfant | {% trans 'eCEP' %}{% endblock title %}
+
+{% load static %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+
+{% include 'snippets/messages.html' %}
+
+<div class="row">
+
+    <div class="col-md-3 mx-auto">
+        <div class="card p-2">
+            <div class="text-center">
+                <img src="{{ student_picture }}" class="w-100" alt="Photo de profil">
+                <ul class="px-2 list-unstyled">
+                    <li>{{ student_name|title }}</li>
+                    <li><strong>{% trans 'Dernière connexion:' %} </strong>{{ student.student.last_login|date }}</li>
+                    <li><strong>{% trans 'Rôle:' %} </strong>
+                        {% trans 'Etudiant' %}
+                    </li>
+                </ul>
+            </div>
+            <hr>
+        </div>
+    </div>
+
+    <div class="col-md-9 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                <p class="fw-bold"><i class="fas fa-book-open"></i> {% trans 'Cours' %}</p>
+                {% if courses %}
+                <ul>
+                    {% for course in courses %}
+                    <li><a href="{{ course.course.get_absolute_url }}" class="text-primary">{{ course.course.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-danger">{% trans 'Pas de cours pour l'instant' %}</div>
+                {% endif %}
+                <hr>
+
+                <p class="fw-bold"><i class="me-2 fas fa-user"></i>{% trans 'Informations personnelles' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Prénom (s):' %}</strong> {{ student.student.first_name|title }}</p>
+                    <p><strong>{% trans 'Nom:' %}</strong> {{ student.student.last_name|title }}</p>
+                    <p><strong>{% trans 'Ientifiant:' %}</strong> {{ student.student.username }}</p>
+                </div>
+
+                <hr>
+                <p class="fw-bold"><i class="me-2 fas fa-graduation-cap"></i>{% trans 'Student Info' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Program:' %} </strong>{{ student.program.title }}</p>
+                </div>
+
+                <hr>
+                <p class="fw-bold"><i class="me-2 fas fa-phone-square-alt"></i>{% trans 'Contact Info' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Email:' %}</strong> {{ student.student.email }}</p>
+                    <p><strong>{% trans 'Numéro de téléphone:' %}</strong> {{ student.student.phone }}</p>
+                    <p><strong>{% trans 'Addresse/ville:' %}</strong> {{ student.student.address }}</p>
+                </div>
+
+                <hr>
+                <p class="fw-bold"><i class="me-2 fa fa-calendar-day"></i>{% trans 'Important Dates' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Dernière cconnexion:' %}</strong> {{ student.student.last_login }}</p>
+                    {% if current_semester and current_session %}
+                    <p><strong>{% trans 'Année académique:' %}</strong> {{ current_semester }} {% trans 'Semester' %} {{ current_session }}</p>
+                    {% endif %}
+                    <p><strong>{% trans Date d'inscription:' %}</strong> {{ student.student.date_joined|date }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mx-auto"></div>
+
+</div>
+{% endif %}
+
+{% endblock content %}

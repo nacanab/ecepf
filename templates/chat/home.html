@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %} Bienvenue | {% endblock title %}
+
+{% block content %}
+
+<style>
+    h1{
+        color: white;
+        font-size: 2rem;
+        text-align: center;
+        font-style: normal;
+        font-size: large;
+        font-display: swap;
+        background-color: rgb(2, 60, 92);
+    }
+    h2{
+        color: rgb(2, 60, 92);
+        font-size: 1.5rem;
+        text-align: center;
+        font-style: normal;
+        font-size: large;
+        font-display:calc(1.5rem + 1.5vw);
+        /*en bold*/
+        font-weight: bold;
+    }
+    #img-responsive{
+        margin: 0 auto;
+        display: flex;
+        width: 50%;
+        height: 200px;
+        border-radius: 15px;
+        
+    }
+</style>
+
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-green">Bienvenue sur eCEP Forum</h1><br>
+    <h2>Connectez-vous et Trouvez vos collegues dans des groupes specifiques</h2>
+</div>
+
+
+<!-- Div pour l'image responsive -->
+<div>
+    <img src="eleves.jpg"  id="img-responsive">
+</div>
+
+
+{% endblock content %}

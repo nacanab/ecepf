@@ -1,0 +1,213 @@
+{% extends 'registration/registration_base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'eCEP - Connexion' %}{% endblock title %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<style>
+  /* Style général pour la page de connexion */
+.login-page {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+/* Moitié gauche : Nom de l'organisation */
+.login-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff; /* Bleu */
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.login-left h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.login-left p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* Moitié droite : Formulaire de connexion */
+.login-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.login-card .form-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #007bff; /* Bleu */
+    text-align: center;
+}
+
+.login-card .form-group label {
+    font-weight: 500;
+    color: #333;
+}
+
+.login-card .form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.login-card .form-control:focus {
+    border-color: #007bff; /* Bleu */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.login-card .btn-primary {
+    width: 100%;
+    background-color: #007bff; /* Bleu */
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.login-card .btn-primary:hover {
+    background-color: #0056b3; /* Bleu plus foncé */
+}
+
+.login-card .login-bottom {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.login-card .login-bottom a {
+    color: #007bff; /* Bleu */
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.login-card .login-bottom a:hover {
+    text-decoration: underline;
+}
+
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .login-page {
+        flex-direction: column;
+    }
+
+    .login-left, .login-right {
+        flex: none;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .login-left {
+        height: 200px;
+    }
+
+    .login-right {
+        align-items: flex-start;
+    }
+}
+</style>
+
+<div class="login-page">
+    <!-- Moitié gauche : Nom de l'organisation -->
+    <div class="login-left">
+        <div>
+            <h1>{% trans 'eCEP' %}</h1>
+            <p>{% trans 'Le CEP a porter de téléphone.' %}</p>
+        </div>
+    </div>
+
+    <!-- Moitié droite : Formulaire de connexion -->
+    <div class="login-right">
+        <div class="login-card">
+            {% include 'snippets/messages.html' %}
+            <div class="form-title" style="color:white;">
+                <i class="fas fa-lock me-2"></i>
+                {% trans 'Connexion' %}
+            </div>
+            <form action="" method="POST" id="login-form">{% csrf_token %}
+                <div class="form-group mb-3">
+                    <label class="mb-2" for="username_id"><i class="fas fa-address-card me-2"></i>{% trans 'Identifiant' %}</label>
+                    <input type="text" name="username" id="username_id" class="form-control" required>
+                    <div id="message-wrapper"></div>
+                </div>
+                <div class="form-group mb-3">
+                    <label class="mb-2" for="password_id"><i class="fas fa-key me-2"></i>{% trans 'Mot de passe' %}</label>
+                    <input type="password" name="password" id="password_id" class="form-control" required>
+                </div>
+                {% if form.errors %}
+                    <span class="text-danger"><i class="fas fa-exclamation-circle"></i> {% trans 'Mot de passe ou identifiant incorrect.' %}</span><br>
+                {% endif %}
+                <button type="submit" class="btn btn-primary" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i><small>{% trans "Se connecter" %}</small>
+                </button>
+            </form>
+            <br>
+            <div class="login-bottom">
+                <a href="{% url 'password_reset' %}" class="link">{% trans 'Mot de passe oublié ?' %}</a>
+            </div>
+            <div class="text-center">
+                <span>{% trans 'Pas encore de compte?' %}</span>
+                <a href="{% url 'role' %}" class="link">{% trans "S'enregistrer" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block js %}
+<script>
+  $('#login-form').submit(function (e) {
+    // e.preventDefault();
+    $('#login-btn').addClass('disabled')
+    $('#login-btn').html(`<i class="fas fa-sign-in-alt"></i> connexion en cours . . .`)
+  })
+
+  $("#username").on("input", function () {
+    username = $(this).val();
+
+    $.ajax({
+      url: "/accounts/ajax/validate-username/",
+      data: {
+        username: username
+      },
+      dataType: 'json',
+      success: function (data) {
+        if (data.is_taken) {
+          console.log(data.is_taken);
+          $('#message-wrapper').html(`<p class="my-2 text-danger"><span class="bg-error p-2"><b>${username}</b> already taken :( try another one </span></p>`)
+        }
+        else {
+          $('#message-wrapper').html(`<p class="my-2 text-success"><span class="bg-correct p-2"><b>${username}</b> is valid </span></p>`)
+        }
+      }
+    })
+  })
+  
+</script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %} Profil | {% trans 'eCEP' %}{% endblock title %}
+
+{% load static %}
+
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ user.get_full_name }}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="row">
+
+    <div class="col-md-3 mx-auto">
+        <div class="card  p-2">
+            <div class="text-center">
+                <img src="{{ user.picture.url }}" class="w-100">
+                <ul class="px-2 list-unstyled">
+                    <li>{{ user.get_full_name|title }}</li>
+                    <li><strong>{% trans 'Dernière connexion:' %} </strong>{{ user.last_login|date }}</li>
+                    <li><strong>{% trans 'Rôle:' %} </strong>
+                        {{ user.get_user_role }}
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <a class="mb-2" href="{% url 'edit_profile' %}"><i class="fas fa-user-edit unstyled"></i>
+                <span class="mobile-hide">{% trans 'Edition de profil' %}</span></a>
+            <a href="{% url 'change_password' %}"><i class="fas fa-lock unstyled"></i><span class="mobile-hide">
+                {% trans 'Changer de mot de passe' %}</span></a>
+        </div>
+    </div>
+
+    <div class="col-md-9 mx-auto">
+        <div class="card">
+            <div class="card-body">
+                {% if user.is_student %}
+                <p class="fw-bold"><i class="fas fa-medal"></i> {% trans 'Mes badges' %}</p>
+                    <ul>
+                        {%if badges %}
+                        {% for attribution in badges %}
+                            <li>
+                                <strong>{{ attribution.badge.nom }}</strong> - {{ attribution.badge.description }}
+                                <img src="{{ attribution.badge.image.url }}" alt="{{ attribution.badge.nom }}" width="50" height="50">
+                                <small>(Obtenu le {{ attribution.date_attribution }})</small>
+                            </li>
+                        {% endfor %}
+                        {% else %}
+                            <div class="text-danger">Vous n'avez aucun badge</div>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+    
+                {% if user.is_lecturer %}
+                <p class="fw-bold"><i class="fas fa-book-open"></i> {% trans 'Mes cours' %}</p>
+                {% if courses %}
+                <ul>
+                    {% for course in courses %}
+                    <li><a href="{{ course.get_absolute_url }}" class="text-primary">{{ course }}</a></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <div class="text-danger">{% trans "Pas de cours pour l'instant!" %}</div>
+                {% endif %}
+                <hr>
+                {% endif %}
+    
+                <p class="fw-bold"><i class="me-2 fas fa-user"></i>{% trans 'Informations personnelles' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Prenom (s):' %}</strong> {{ user.first_name|title }}</p>
+                    <p><strong>{% trans 'Nom:' %}</strong> {{ user.last_name|title }}</p>
+                    <p><strong>{% trans 'Identifiant.:' %}</strong> {{ user.username }}</p>
+                </div>
+    
+                <hr>
+                <p class="fw-bold"><i class="me-2 fas fa-phone-square-alt"></i>{% trans 'Contact Info' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Email:' %}</strong> {{ user.email }}</p>
+                    <p><strong>{% trans 'Numéro de téléphone.:' %}</strong> {{ user.phone }}</p>
+                    <p><strong>{% trans 'Addresse/ville:' %}</strong> {{ user.address }}</p>
+                </div>
+    
+                <hr>
+                <p class="fw-bold"><i class="me-2 fa fa-calendar-day"></i>{% trans 'Dates importantes' %}</p>
+                <div class="dashboard-description">
+                    <p><strong>{% trans 'Dernière connexion:' %}</strong> {{ user.last_login }}</p>
+                    {% if current_semester and current_session %}
+                    <p><strong>{% trans 'Année académique:' %}</strong> {{ current_semester }} {% trans 'Semester' %} {{ current_session }}</p>
+                    {% endif %}
+                    <p><strong>{% trans "Date d'inscription:" %}</strong> {{ user.date_joined|date }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mx-auto"></div>
+
+</div>
+{% endif %}
+
+{% endblock content %}

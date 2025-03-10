@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} eCEPChat</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+    <style>
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+        }
+        #body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #01154b;
+        }
+        #nav {
+            background-color: #1a1a1d;
+        }
+        #mobile-menu {
+            display: none;
+        }
+        #nav-links {
+            display: flex;
+            align-items: center;
+        }
+        #menu-toggle {
+            display: none;
+        }
+        #site-title {
+            font-size: 1.25rem;
+        }
+        #user-greeting {
+            padding: 0 1.25rem;
+        }
+        
+        @media (max-width: 760px) {
+            #nav-links {
+                display: none;
+                width: 40%;
+                padding-bottom: 200px;
+                border-radius: 5%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #1a1a1d;
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            #nav-links.active {
+                display: flex;
+            }
+            #menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+            }
+            #user-greeting {
+                padding: 0.5rem 0;
+            }
+            #site-title {
+                font-size: 1.1rem;
+            }
+           
+        }
+    </style>
+</head>
+<body class="bg-teal-600" id="body">
+    <nav class="flex items-center justify-between px-4 py-6 bg-teal-800 relative" id="nav">
+        <div>
+            <a href="/" class="text-white" id="site-title">Espace eCEP Forum</a>
+        </div>
+
+        <button id="menu-toggle" class="text-white">
+            ☰
+        </button>
+
+        <div class="flex items-center space-x-4" id="nav-links">
+            {% if request.user.is_authenticated %}
+            <a href="#" class="text-white" id="user-greeting">Salut {{ request.user.username }}</a>
+            <a href="/rooms/" class="text-white hover:text-gray-200">Groupes de Discussions</a>
+            <a href="/logout/" class="px-5 py-3 rounded-xl bg-teal-600 text-white hover:bg-teal-700">Deconnexion</a>
+            {% else %}
+            <a href="/login/" class="text-white hover:text-gray-200">Connexion</a>
+            <a href="/signup/" class="px-5 py-3 rounded-xl bg-teal-600 text-white hover:bg-teal-700">S'inscrire</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    {% block scripts %}
+    {% endblock %}
+
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            document.getElementById('nav-links').classList.toggle('active');
+        });
+
+        // Fermer le menu quand on clique en dehors
+        document.addEventListener('click', function(event) {
+            const nav = document.getElementById('nav');
+            const navLinks = document.getElementById('nav-links');
+            const menuToggle = document.getElementById('menu-toggle');
+            
+            if (!nav.contains(event.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Fermer le menu quand l'écran est redimensionné
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('nav-links').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

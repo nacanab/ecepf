@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .alert-container {
+    margin-top: 20px;
+}
+
+.form-container {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+button[type="submit"] {
+    width: 100%;
+}
+
+</style>
+{% include 'snippets/messages.html' %}
+<h2>Assigner des étudiants à {{ lecturer.user.first_name }} {{ lecturer.user.last_name }}</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Assigner</button>
+</form>
+
+{% endblock %}

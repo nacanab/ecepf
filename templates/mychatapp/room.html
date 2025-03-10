@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %} {{ room.name }} | {% endblock title %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.12.0/dist/emoji-picker-element.min.css" />
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .forum-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 60px;
+        }
+        #display {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .message-container {
+            position: fixed;
+            bottom: 0;
+            left: 50;
+            width: 70%;
+            background: #fff;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        a{
+            text-decoration: none;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="forum-container container">
+        <div id="display" class="overflow-auto border rounded p-3">
+            <p>Aucun message présent</p>
+        </div>
+    </div>
+    
+    <div class="message-container container">
+        <form id="post-form" class="d-flex align-items-center">
+            {% csrf_token %}
+            <input type="hidden" name="username" id="username" value="{{username}}"/>
+            <input type="hidden" name="room_id" id="room_id" value="{{room_details.id}}"/>
+            <div class="input-group">
+                <button type="button" class="btn btn-outline-secondary" id="emoji-button">
+                    😀
+                </button>
+                <input type="text" name="message" id="message" class="form-control" placeholder="Écrivez votre message...">
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+        </form>
+        <emoji-picker id="emoji-picker" style="display: none; position: absolute;"></emoji-picker>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            var display = $("#display");
+            setInterval(function(){
+                $.ajax({
+                    type: 'GET',
+                    url : "mychatapp/getchatMessages/{{room_id}}/",
+                    success: function(response){
+                        var isAtBottom = display.scrollTop() + display.innerHeight() >= display[0].scrollHeight;
+                        display.empty();
+                        for (var key in response.messages) {
+                            var rawDate = new Date(response.messages[key].date);
+                            var formattedDate = rawDate.toLocaleString('fr-FR', {
+                                day: 'numeric',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute:'2-digit'
+                            });
+                            var temp = "<div class='darker'><b>" + response.messages[key].user + 
+                                     "</b><p>" + response.messages[key].value + 
+                                     "</p><span>" + formattedDate + "</span></div>";
+                            display.append(temp);
+                        }
+                        if (isAtBottom) {
+                            display.scrollTop(display[0].scrollHeight);
+                        }
+                    },
+                    error: function(){
+                        alert('Une erreur est survenue');
+                    }
+                });
+            }, 500);
+        });
+        
+        $(document).on('submit','#post-form',function(e){
+            e.preventDefault();
+            $.ajax({
+                type:'POST',
+                url:'mychatapp/send',
+                data:{
+                    username:$('#username').val(),
+                    room_id:$('#room_id').val(),
+                    message:$('#message').val(),
+                    csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(){
+                    $('#message').val('');
+                }
+            });
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const emojiButton = document.getElementById('emoji-button');
+            const emojiPicker = document.getElementById('emoji-picker');
+            const messageInput = document.getElementById('message');
+
+            emojiButton.addEventListener('click', function() {
+                emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'block' : 'none';
+            });
+
+            emojiPicker.addEventListener('emoji-click', function(event) {
+                messageInput.value += event.detail.unicode;
+                emojiPicker.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

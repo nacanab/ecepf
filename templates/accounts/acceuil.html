@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCEP - Plateforme d'Éducation Communautaire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2A4365;
+            --secondary-color: #F6AD55;
+            --accent-color: #48BB78;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            top:0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+
+        /* Sections principales */
+        .hero {
+            background: url('../../static/img/sawadogo.jpg') no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 60px;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .search-bar {
+            margin-top: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-input {
+            padding:0;
+            margin: 0 auto;
+            display:flex;
+            width: 100%;
+            padding: 1rem;
+            border-radius: 30px;
+            border: none;
+            font-size: 1rem;
+        }
+
+        /* Catégories */
+        .categories {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .category-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 10px;
+            background: #f5f5f5;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Provinces */
+        .provinces-section {
+            padding: 4rem 2rem;
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .provinces-list {
+            columns: 3;
+            column-gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            list-style: none;
+        }
+
+        .provinces-list li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .provinces-list li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+        }
+
+        /* Newsletter */
+        .newsletter {
+            padding: 4rem 2rem;
+            background: var(--accent-color);
+            text-align: center;
+        }
+
+        .newsletter-input {
+            padding: 1.2rem;
+            width: 100%;
+            max-width: 500px;
+            border: none;
+            border-radius: 50px;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 6rem 2rem 3rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .footer-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .social-icons a {
+            font-size: 1.8rem;
+            color: #cbd5e0;
+            transition: all 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .provinces-list {
+                columns: 2;
+            }
+            
+            .ecep-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .provinces-list {
+                columns: 1;
+            }
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn.primary {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(246, 173, 85, 0.3);
+        }
+
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(246, 173, 85, 0.4);
+        }
+
+        .btn.secondary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn.secondary:hover {
+            background: #1E2E4A;
+        }
+
+        /* Amélioration de la barre de recherche */
+        .search-bar {
+            position: relative;
+            max-width: 700px;
+            margin: 2rem auto 0;
+        }
+
+        .search-input {
+            padding-right: 120px;
+            font-size: 1.1rem;
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.7rem 1.5rem;
+        }
+
+        /* Amélioration des catégories */
+        .category-card {
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 2.5rem 1rem;
+        }
+
+        .category-card i {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .category-card h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        /* ... (conserve les styles existants) ... */
+
+/* Section Actualités */
+.actualites-section {
+    padding: 4rem 2rem;
+    background: #f8fafc;
+}
+
+.actualites {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+}
+
+.grande-card {
+    grid-column: 1 / 3;
+    position: relative;
+}
+
+.petite-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.grande-card img {
+    height: 400px;
+}
+
+.card p {
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    line-height: 1.4;
+}
+
+.all-news-button {
+    display: block;
+    width: fit-content;
+    margin: 2rem auto 0;
+    padding: 1rem 2.5rem;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.all-news-button:hover {
+    background: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Responsive Actualités */
+@media (max-width: 1024px) {
+    .card-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .grande-card {
+        grid-column: 1 / 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .card img {
+        height: 200px;
+    }
+    
+    .grande-card img {
+        height: 250px;
+    }
+}
+
+.hero-infos {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.info-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(5px);
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+
+.info-card:hover {
+    background: rgba(255,255,255,0.25);
+    transform: translateY(-3px);
+}
+
+.info-card i {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.info-card p {
+    margin: 0;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .info-card {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">eCEP</a>
+            <div class="auth-buttons">
+                <a href="{% url 'home' %}"><button class="btn">Connexion</button></a>
+                <a href="{% url 'role' %}"><button class="btn primary">Inscription</button></a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Trouvez votre space idéal pour preparer votre CEP</h1>
+                <p>Des milliers de cours en ligne proposés par les meilleures écoles et entreprises pour vous aider à bien réaliser votre projet d'étude</p>
+                <div class="hero-infos">
+                    <div class="info-card">
+                        <i class="fas fa-users"></i>
+                        <p>+5000 élèves formés</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-book-open"></i>
+                        <p>+1500 ressources pédagogiques</p>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <p>Encadrement par des experts</p>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="Rechercher un cours...">
+                        <button class="btn primary">Rechercher</button>
+                    </div>
+            </div>
+
+        </section>
+
+               <!-- Catégories améliorées -->
+               <section class="categories">
+                <h2>Nos Domaines d'Étude</h2>
+                <div class="categories-grid">
+                    <div class="category-card">
+                        <i class="fas fa-atom fa-3x"></i>
+                        <h3>Sciences</h3>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-landmark fa-3x"></i>
+                        <h3>Histoire</h3>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-globe-africa fa-3x"></i>
+                        <h3>Géographie</h3>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-calculator fa-3x"></i>
+                        <h3>Calculs</h3>
+                    </div>
+                    <div class="category-card">
+                        <i class="fas fa-question-circle fa-3x"></i>
+                        <h3>Problèmes</h3>
+                    </div>
+                    <!-- Ajouter d'autres catégories au besoin -->
+                </div>
+            </section>
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <h2>Restez Informés</h2>
+        <p>Abonnez-vous à notre newsletter pour les dernières actualités</p>
+        <input type="email" class="newsletter-input" placeholder="Votre email...">
+        <button class="btn primary">S'abonner</button>
+    </section>
+            <!--ACTUALITES-->
+<div class="actualites">
+    <div class="card-container">
+        <div class="card grande-card">
+            <img src="actu.png" alt="">
+            
+            
+            <p>Le Lycée Provincial de Kaya acceuille une fois de plus les nouveaux Lycéens pour la rentrée en octobre 2025</p>
+        </div>
+        <div class="card petite-card">
+            <img src="actu.png" alt="">
+            <p>Journée de rencontre du Ministre de l'Education prevue à une date ulterieure</p>
+        </div>
+        <div class="card petite-card">
+            <img src="actu.png" alt="">
+            <p>Guide de la rentrée collegienne 2025</p>
+        </div>
+        <div class="card petite-card">
+            <img src="actu.png" alt="">
+            <p>Nouveau partenariat avec le Lycée National de Ouagadougou</p>
+        </div>
+        <div class="card petite-card">
+            <img src="actu.png" alt="">
+            <p>Préparation aux concours nationaux 2025</p>
+        </div>
+    </div>
+    <a href="#" class="all-news-button">TOUTE L'ACTUALITÉ</a>
+</div>
+
+
+
+        <!-- Provinces -->
+        <section class="provinces-section">
+            <h2>Provinces dejà presentes sur notre Plateforme</h2>
+            <ul class="provinces-list">
+                
+                    <li>Balé</li>
+                    <li>Bam</li>
+                    <li>Banwa</li>
+                    <li>Bazèga</li>
+                    <li>Bougouriba</li>
+                    <li>Boulgou</li>
+                    <li>Boulkiemdé</li>
+                    <li>Comoé</li>
+                    <li>Ganzourgou</li>
+                    <li>Gnagna</li>
+                    <li>Gourma</li>
+                    <li>Houet</li>
+                    <li>Ioba</li>
+                    <li>Kadiogo</li>
+                    <li>Kénédougou</li>
+                    <li>Komondjari</li>
+                    <li>Kompienga</li>
+                    <li>Kossi</li>
+                    <li>Koulpélogo</li>
+                    <li>Kouritenga</li>
+                    <li>Kourwéogo</li>
+                    <li>Léraba</li>
+                    <li>Loroum</li>
+                    <li>Mouhoun</li>
+                    <li>Nahouri</li>
+                    <li>Namentenga</li>
+                    <li>Nayala</li>
+                    <li>Noumbiel</li>
+                    <li>Oubritenga</li>
+                    <li>Oudalan</li>
+                    <li>Passoré</li>
+                    <li>Poni</li>
+                    <li>Sanguié</li>
+                    <li>Sanmatenga</li>
+                    <li>Séno</li>
+                    <li>Sissili</li>
+                    <li>Soum</li>
+                    <li>Sourou</li>
+                    <li>Tapoa</li>
+                    <li>Tuy</li>
+                    <li>Yagha</li>
+                    <li>Yatenga</li>
+                    <li>Ziro</li>
+                    <li>Zondoma</li>
+                    <li>Zoundwéogo</li>
+                  </ul>
+                  
+                
+        </section>
+
+        
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>eCEP</h3>
+                <p>Éducation Communautaire pour Tous</p><br>
+                <p>Suivez-nous sur les reseaux sociaux</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Ressources</h3>
+                <div class="footer-links">
+                    <a href="#">Blog éducatif</a>
+                    <a href="#">Guides pratiques</a>
+                    <a href="#">Bibliothèque numérique</a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Légal</h3>
+                <div class="footer-links">
+                    <a href="#">Confidentialité</a>
+                    <a href="#">Conditions d'utilisation</a>
+                    <a href="#">Accessibilité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+

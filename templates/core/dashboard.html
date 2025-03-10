@@ -1,0 +1,660 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+
+{% if request.user.is_superuser %}
+{% trans 'Tableau de bord' %} | {% trans 'eCEP' %} 
+{% endif %}
+
+{% if request.user.is_parent %}
+{% trans 'Tableau de bord' %} | {% trans 'eCEP' %} 
+{% endif %}
+
+
+{% endblock title %}
+{% load static %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+{% if request.user.is_superuser %}
+<style></style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accuiel' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Tableau de bord' %}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h1 class="title-1">{% trans 'Tableau de bord' %}</h1>
+</div>
+
+<div class="row users-count px-3">
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-aqua"></i></h3>
+			<div class="text-right">
+				{% trans 'Eleves' %}
+				<h2>{{ student_count }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'Enseignants' %}
+				<h2>{{ lecturer_count }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-red"></i></h3>
+			<div class="text-right">
+				{% trans 'Administrateurs' %}
+				<h2>{{ superuser_count }}</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row px-2">
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="traffic"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="enrollement"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="students_grade"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="card w-100 h-100 p-3">
+			<h5>{% trans 'Latest activities' %}</h5>
+			<ul class="ps-2 small">
+				{% for log in logs %}
+				<li>{{ log.message }} <span class="text-muted">- {{ log.created_at }}</span></li>
+				{% empty %}
+				<li>{% trans 'No recent activity' %}</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+<br>
+<div class="bg-white p-3">
+	<h5 class="border-bottom pb-2">{% trans 'Démographie' %}</h5>
+	<div class="row">
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="gender"></canvas>
+		</div>
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="ethnicity"></canvas>
+		</div>
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="language"></canvas>
+		</div>
+	</div>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+{% if request.user.is_lecturer %}
+<style></style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accuiel' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Tableau de bord' %}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h1 class="title-1">{% trans 'Tableau de bord' %}</h1>
+</div>
+
+<div class="row users-count px-3">
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-aqua"></i></h3>
+			<div class="text-right">
+				{% trans 'Mes elèves/Total eleves' %}
+				<h2>{{ student_count }}/{{student_total_count}}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'Cours' %}
+				<h2>{{ course_count }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-red"></i></h3>
+			<div class="text-right">
+				{% trans 'Administrateurs' %}
+				<h2>{{ superuser_count }}</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row px-2">
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="traffic"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="enrollement"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="chart-wrap">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="students_grade"></canvas>
+		</div>
+	</div>
+	<div class="col-md-6 p-2">
+		<div class="card w-100 h-100 p-3">
+			<h5>{% trans 'Dernières activités' %}</h5>
+			<ul class="ps-2 small">
+				{% for log in logs %}
+				<li>{{ log.message }} <span class="text-muted">- {{ log.created_at }}</span></li>
+				{% empty %}
+				<li>{% trans 'No recent activity' %}</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+<br>
+<div class="bg-white p-3">
+	<h5 class="border-bottom pb-2">{% trans 'Démographie' %}</h5>
+	<div class="row">
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="gender"></canvas>
+		</div>
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="ethnicity"></canvas>
+		</div>
+		<div class="col-md-4">
+			<i class="fas fa-expand-alt"></i>
+			<canvas id="language"></canvas>
+		</div>
+	</div>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if request.user.is_parent %}
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans 'Tableau de bord' %}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h1 class="title-1">{% trans 'Tableau de bord' %}</h1>
+</div>
+
+<div class="row users-count px-3">
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fa-solid fa-chalkboard-teacher bg-light-aqua"></i></h3>
+			<div class="text-right">
+				{% trans 'cours suivis/Nombre de cours' %}
+				<h2>{{ student_count }}/{{ courses_count }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fa-solid fa-clipboard-list bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'exercices passés/nombre exercices' %}
+				<h2>{{ quiz_count }}/{{ total_quiz_count }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fa-solid fa-stopwatch bg-light-red"></i></h3>
+			<div class="text-right">
+				{% trans 'Temps passé sur la plateforme' %}
+				<h2>{{ total_time }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fa-solid fa-pencil bg-light-purple"></i></h3>
+			<div class="text-right">
+				{% trans 'examens réussi/examens échoués' %}
+				<h2>500</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row px-2">
+    <div class="col-md-6 p-2">
+        <div class="card w-100 h-100 p-3 shadow-sm rounded-3">
+            <ul class="nav nav-tabs" id="activityTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="recent-tab" data-bs-toggle="tab" data-bs-target="#recent" type="button" role="tab" aria-controls="recent" aria-selected="true">
+                        {% trans 'Activities récentes' %}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="student-tab" data-bs-toggle="tab" data-bs-target="#student" type="button" role="tab" aria-controls="student" aria-selected="false">
+                        {% trans "Activités de l'étudiant" %}
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="recent" role="tabpanel" aria-labelledby="recent-tab">
+                    <ul class="list-unstyled ps-2 small">
+                        {% for log in logs %}
+                        <li class="mb-2">
+                            <i class="fas fa-circle text-primary me-2"></i>
+                            {{ log.message }} <span class="text-muted">- {{ log.created_at }}</span>
+                        </li>
+                        {% empty %}
+                        <li><i class="fas fa-circle text-muted me-2"></i>{% trans 'Aucune activité récente' %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="student" role="tabpanel" aria-labelledby="student-tab">
+                    <ul class="list-unstyled ps-2 small">
+                        {% for log in studentlogs %}
+                        <li class="mb-2">
+                            <i class="fas fa-circle text-success me-2"></i>
+                            {{ log.message }} <span class="text-muted">- {{ log.created_at }}</span>
+                        </li>
+                        {% empty %}
+                        <li><i class="fas fa-circle text-muted me-2"></i>{% trans 'Aucune activité récente' %}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+
+{% block js %}
+
+<script src="{% url 'javascript-catalog' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+<script>
+	$('.fa-expand-alt').click(function () {
+		if ($(this).parent('.chart-wrap').parent('.col-md-6').hasClass('expand')) {
+			$('.col-md-6.expand').removeClass('expand');
+		}
+		else {
+			$('.col-md-6.expand')?.removeClass('expand');
+			$(this).parent('.chart-wrap').parent('.col-md-6').addClass('expand');
+		}
+	})
+</script>
+<script>
+	const malesCount = {{ males_count }}
+const femalesCount = {{ females_count }}
+
+$(document).ready(function () {
+
+    // Setup
+    const labels = [
+        gettext('January'),
+        gettext('February'),
+        gettext('March'),
+        gettext('April'),
+        gettext('May'),
+        gettext('June'),
+    ];
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: gettext('Students'),
+            backgroundColor: 'rgba(86, 224, 224, 0.5)',
+            borderColor: 'rgb(86, 224, 224)',
+            hoverBorderWidth: 3,
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }, {
+            label: gettext('Teachers'),
+            backgroundColor: 'rgba(253, 174, 28, 0.5)',
+            borderColor: 'rgb(253, 174, 28)',
+            hoverBorderWidth: 3,
+            data: [20, 0, 15, 4, 6, 4, 60],
+        }, {
+            label: gettext('Admins'),
+            backgroundColor: 'rgba(203, 31, 255, 0.5)',
+            borderColor: 'rgb(203, 31, 255)',
+            hoverBorderWidth: 3,
+            data: [85, 30, 34, 20, 20, 55, 45],
+        }, {
+            label: gettext('Stuffs'),
+            backgroundColor: 'rgba(255, 19, 157, 0.5)',
+            borderColor: 'rgb(255, 19, 157)',
+            hoverBorderWidth: 3,
+            data: [45, 75, 70, 80, 20, 30, 90],
+        }]
+    };
+
+    var traffic = document.getElementById('traffic');
+    var chart = new Chart(traffic, {
+        type: 'line',
+        data: data,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Website Traffic'),
+                    padding: 15
+                }
+            }
+        }
+    });
+
+    // Setup
+    const labelsEnrollment = [
+        '2016',
+        '2017',
+        '2018',
+        '2019',
+        '2020',
+        '2021',
+    ];
+    const dataEnrollment = {
+        labels: labelsEnrollment,
+        datasets: [{
+            label: gettext('Comp.S'),
+            backgroundColor: 'rgba(86, 224, 224, 0.5)',
+            borderColor: 'rgb(86, 224, 224)',
+            hoverBorderWidth: 3,
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }, {
+            label: gettext('Architecture'),
+            backgroundColor: 'rgba(253, 174, 28, 0.5)',
+            borderColor: 'rgb(253, 174, 28)',
+            hoverBorderWidth: 3,
+            data: [20, 0, 15, 4, 6, 4, 60],
+        }, {
+            label: gettext('Civil Eng'),
+            backgroundColor: 'rgba(203, 31, 255, 0.5)',
+            borderColor: 'rgb(203, 31, 255)',
+            hoverBorderWidth: 3,
+            data: [85, 30, 34, 20, 20, 55, 45],
+        }, {
+            label: gettext('Accounting'),
+            backgroundColor: 'rgba(255, 19, 157, 0.5)',
+            borderColor: 'rgb(255, 19, 157)',
+            hoverBorderWidth: 3,
+            data: [45, 75, 70, 80, 20, 30, 90],
+        }, {
+            label: gettext('Business M.'),
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            borderColor: 'rgb(0, 0, 0)',
+            hoverBorderWidth: 3,
+            data: [15, 75, 45, 90, 60, 30, 90],
+        }]
+    };
+
+    var enrollement = document.getElementById('enrollement');
+    var chart = new Chart(enrollement, {
+        type: 'bar',
+        data: dataEnrollment,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Enrollment per course'),
+                    padding: 20
+                }
+            }
+        }
+    });
+
+    // Average grade setup
+    const labelsGrade = [
+        '2017',
+        '2018',
+        '2019',
+        '2020',
+        '2022',
+    ];
+    const dataGrade = {
+        labels: labelsGrade,
+        datasets: [{
+            label: gettext("Comp sci."),
+            backgroundColor: 'rgba(86, 224, 224, 0.5)',
+            borderColor: 'rgb(86, 224, 224)',
+            hoverBorderWidth: 3,
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }, {
+            label: gettext("Civil eng."),
+            backgroundColor: 'rgba(253, 174, 28, 0.5)',
+            borderColor: 'rgb(253, 174, 28)',
+            hoverBorderWidth: 3,
+            data: [20, 0, 15, 4, 6, 4, 60],
+        }, {
+            label: gettext("Architect."),
+            backgroundColor: 'rgba(203, 31, 255, 0.5)',
+            borderColor: 'rgb(203, 31, 255)',
+            hoverBorderWidth: 3,
+            data: [85, 30, 34, 20, 20, 55, 45],
+        }, {
+            label: gettext("Economics"),
+            backgroundColor: 'rgba(255, 19, 157, 0.5)',
+            borderColor: 'rgb(255, 19, 157)',
+            hoverBorderWidth: 3,
+            data: [45, 75, 70, 80, 20, 30, 90],
+        }]
+    };
+    
+    var students_grade = document.getElementById('students_grade');
+    var chart = new Chart(students_grade, {
+        type: 'bar',
+        data: dataGrade,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Students average grade (performance)'),
+                    padding: 20
+                }
+            }
+        }
+    });
+
+    const dataGender = {
+        labels: [
+            gettext('Man'),
+            gettext('Women')
+        ],
+        datasets: [{
+            label: gettext("Students Gender Dataset"),
+            data: [malesCount, femalesCount],
+            backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    var gender = document.getElementById('gender');
+    var chart = new Chart(gender, {
+        type: 'pie',
+        data: dataGender,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Students Gender'),
+                    padding: 20
+                }
+            }
+        }
+    });
+
+    const dataQualification = {
+        labels: [
+            gettext('PHD'),
+            gettext('Masters'),
+            gettext('BSc degree')
+        ],
+        datasets: [{
+            label: gettext("Lecturer Qualifications Dataset"),
+            data: [24, 30, 26],
+            backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 193, 7)',
+            'rgb(54, 162, 235)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+    var ethnicity = document.getElementById('ethnicity');
+    var chart = new Chart(ethnicity, {
+        type: 'pie',
+        data: dataQualification,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Lecturer qualifications'),
+                    padding: 20
+                }
+            }
+        }
+    });
+
+    const dataLevels = {
+        labels: [
+            gettext('PHD'),
+            gettext('Masters'),
+            gettext('BSc degree')
+        ],
+        datasets: [{
+            label: gettext("Students level"),
+            data: [14, 30, 56],
+            backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(255, 193, 7)',
+            'rgb(54, 162, 235)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+    var language = document.getElementById('language');
+    var chart = new Chart(language, {
+        type: 'pie',
+        data: dataLevels,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: gettext('Student levels'),
+                    padding: 20
+                }
+            }
+        }
+    });
+})
+
+</script>
+
+{% endblock %}

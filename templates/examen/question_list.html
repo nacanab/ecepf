@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Styles pour la liste des questions */
+    .question-list-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .question-list table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .question-list th, .question-list td {
+        padding: 12px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .question-list th {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    .question-list tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .question-list tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .question-list .actions a {
+        margin-right: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .question-list .actions a:hover {
+        text-decoration: underline;
+    }
+</style>
+{% include 'snippets/messages.html' %}
+{% include 'snippets/filter_form.html' %}
+<div class="question-list-container">
+    <h1>Liste des questions pour {{ course.title }}</h1>
+    <p><strong>Examen :</strong> {{ examen.title }}</p>
+
+    <div class="question-list">
+        <table>
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Type</th>
+                    <th>Score</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                    <td>{{ question.content }}</td>
+                    <td>{{ question.get_question_type_display }}</td>
+                    <td>{{ question.score }}</td>
+                    <td class="actions">
+                        <a href="{% url 'question_update' question.id %}">Modifier</a>
+                        <a href="{% url 'question_delete' question.id %}">Supprimer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'question_create' examen.slug course.id %}" class="btn btn-primary">Ajouter une question</a>
+    <a href="{% url 'examen_detail' examen.slug %}" class="btn btn-secondary">Retour à l'examen</a>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% include 'snippets/messages.html' %}
+
+<h1>{{ title }}</h1>
+
+<form method="post" class="question-form">
+    {% csrf_token %}
+    
+    <!-- Champ pour le contenu de la question -->
+    <div class="form-group">
+        <label for="{{ form.content.id_for_label }}" class="form-label">Contenu de la question</label>
+        {{ form.content }}
+        {% if form.content.errors %}
+            <div class="text-danger error-message">
+                {{ form.content.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour le type de question -->
+    <div class="form-group">
+        <label for="{{ form.question_type.id_for_label }}" class="form-label">Type de question</label>
+        {{ form.question_type }}
+        {% if form.question_type.errors %}
+            <div class="text-danger error-message">
+                {{ form.question_type.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour le score de la question -->
+    <div class="form-group">
+        <label for="{{ form.score.id_for_label }}" class="form-label">Score</label>
+        {{ form.score }}
+        {% if form.score.errors %}
+            <div class="text-danger error-message">
+                {{ form.score.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Champ pour sélectionner le cours associé -->
+    <div class="form-group">
+        <label for="{{ form.course.id_for_label }}" class="form-label">Cours associé</label>
+        {{ form.course }}
+        {% if form.course.errors %}
+            <div class="text-danger error-message">
+                {{ form.course.errors }}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary submit-button">Enregistrer</button>
+</form>
+
+<style>
+    /* Style général du formulaire */
+    .question-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Style des groupes de champs */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Style des labels */
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Style des champs de formulaire */
+    .question-form input,
+    .question-form textarea,
+    .question-form select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: #fff;
+        transition: border-color 0.3s ease;
+    }
+
+    .question-form input:focus,
+    .question-form textarea:focus,
+    .question-form select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    /* Style des messages d'erreur */
+    .error-message {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #dc3545;
+    }
+
+    /* Style du bouton de soumission */
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Style pour les messages de succès ou d'erreur */
+    .messages {
+        margin-bottom: 20px;
+    }
+
+    .messages .success {
+        color: #28a745;
+    }
+
+    .messages .error {
+        color: #dc3545;
+    }
+</style>
+
+{% endblock %}

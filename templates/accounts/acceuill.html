@@ -1,0 +1,1137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceuil eCEP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <style>
+        /*Header et generalité*/
+    /* Header styles */
+    :root {
+  --primary-color: #003366;    /* Deep blue */
+  --secondary-color: #990000;  /* Burgundy */
+  --accent-color: #FFD700;     /* Gold */
+  --text-color: hsl(180, 14%, 99%);
+  --light-bg: #f5f5f5;
+  --header-height: 4rem;
+}
+
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  height: var(--header-height);
+}
+
+
+
+.nav {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin-inline: 1.5rem;
+}
+
+.nav__logo {
+  display: flex;
+  align-items: center;
+  column-gap: .5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.nav__list {
+  display: flex;
+  column-gap: 2.5rem;
+  list-style: none;
+}
+
+.nav__link {
+  color: white;
+  text-decoration: none;
+  transition: color .3s;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.nav__link:hover {
+  color: var(--accent-color);
+}
+
+/* Dropdown styles */
+.dropdown__menu, 
+.dropdown__submenu {
+  position: absolute;
+  background-color: rgb(10, 4, 121);
+  box-shadow: 0 4px 12px #fcfafaf5;
+  padding: 1rem;
+  border-radius: .4rem;
+  border-top: 3px solid var(--secondary-color);
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+  border-radius: 15px;
+}
+
+.dropdown__menu {
+  width: 250px;
+  top: 3.5rem;
+}
+
+.dropdown__submenu {
+  width: 200px;
+  left: 100%;
+  top: 0;
+}
+
+.dropdown__link {
+  display: flex;
+  align-items: center;
+  column-gap: .5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  padding: .75rem 1rem;
+  transition: background-color .3s;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+
+.dropdown__link:hover {
+  background-color: var(--light-bg);
+  color: var(--secondary-color);
+}
+
+/* Show dropdown */
+.dropdown__item:hover .dropdown__menu {
+  opacity: 1;
+  visibility: visible;
+  top: 3rem;
+}
+
+.dropdown__subitem:hover .dropdown__submenu {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Body spacing */
+body {
+  padding-top: calc(var(--header-height) + 2rem);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+   
+  .nav__toggle {
+    display: block;
+    cursor: pointer;
+    color: white;
+
+  }
+
+  .nav__menu {
+    position: fixed;
+    left: 0;
+    top: -100%;
+    width: 100%;
+    padding: 4rem 1rem;
+    background-color: var(--primary-color);
+    border-bottom: 3px solid var(--secondary-color);
+    transition: top .3s;
+    overflow: auto;
+    border-end-end-radius: 15px;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    row-gap: 2rem;
+    text-align: center;
+    
+  }
+
+  .dropdown__menu, 
+  .dropdown__submenu {
+    position: relative;
+    width: 100%;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-top: none;
+    box-shadow: none;
+  }
+
+  .dropdown__link {
+    color: white;
+  }
+
+  .dropdown__link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--accent-color);
+  }
+}
+
+/*RESPONSIVITE DU HEADER*/
+@media screen and (max-width: 768px) {
+    
+  .nav__toggle {
+    display: flex;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    
+  }
+
+  .nav__burger, 
+  .nav__close {
+    display: block;
+  }
+
+  .nav__close {
+    display: none;
+  }
+
+  .nav__menu {
+    position: fixed;
+    left: -100%;
+    top: var(--header-height);
+    width: 40%;
+    height: 50vh;
+    padding: 2rem;
+    background-color: var(--primary-color);
+    border-right: 3px solid var(--secondary-color);
+    transition: left 0.4s ease-in-out;
+    border-end-end-radius: 15px;
+    }
+
+  .nav__menu.show-menu {
+    left: 0;
+  }
+
+  .nav__list {
+    flex-direction: column;
+    row-gap: 1.5rem;
+  }
+
+  .dropdown__menu, 
+  .dropdown__submenu {
+    position: static;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem;
+    margin-top: 1rem;
+    border: none;
+    box-shadow: none;
+  }
+
+  .dropdown__link {
+    padding: 0.75rem;
+    color: white;
+  }
+
+  .dropdown__link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--accent-color);
+  }
+}
+
+
+
+
+
+
+/* Section de page d'acceuil */
+.students-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f6f9fc 0%, #edf2f7 100%);
+}
+
+.students-grid {
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.student-card {
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.student-card:hover {
+  transform: translateY(-10px);
+}
+
+.student-image {
+  position: relative;
+  height: 400px;
+}
+
+.student-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 51, 102, 0.9), transparent);
+  padding: 2rem 1.5rem;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.student-card:hover .overlay {
+  transform: translateY(0);
+}
+
+.overlay p {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.overlay span {
+  color: #FFD700;
+  font-size: 1rem;
+}
+
+.cta-container {
+  text-align: center;
+}
+
+.campus-button {
+  background: linear-gradient(45deg, #003366, #004d99);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2);
+}
+
+.campus-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 51, 102, 0.3);
+  background: linear-gradient(45deg, #004d99, #0066cc);
+}
+
+.button-text {
+  font-weight: 600;
+}
+@media screen and (max-width: 768px) {
+  .nav__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+
+  .hamburger {
+    width: 24px;
+    height: 20px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    width: 100%;
+    background: var(--accent-color);
+    transition: .3s;
+  }
+
+  .hamburger span:nth-child(1) { top: 0; }
+  .hamburger span:nth-child(2) { top: 9px; }
+  .hamburger span:nth-child(3) { top: 18px; }
+
+  /* Animation for menu open */
+  .show-menu .hamburger span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .show-menu .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .show-menu .hamburger span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+  }
+}
+
+
+
+
+
+        
+        /* Styles de base */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 0;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Sections du footer */
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin: 10px;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+
+        .footer-section p,
+        .footer-section ul {
+            margin: 5px 0;
+            font-size: 0.95rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 5px;
+        }
+
+        .footer-section ul li a,
+        .footer-section a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .footer-section ul li a:hover,
+        .footer-section a:hover {
+            color: #FFD700;
+        }
+
+        /* Icônes des réseaux sociaux */
+        .social-icons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .social-icons a:hover {
+            color: #FFD700;
+        }
+
+        /* Footer bas */
+        .footer-bottom {
+            text-align: center;
+            padding: 20px;
+            background-color: #222;
+            font-size: 1rem;
+            border-top: 1px solid #444;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+        }
+        /*ACTUALITES*/
+/* Blinking Animation Keyframes */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Actualites Section Blink */
+.actualites {
+    animation: blink 2s infinite;
+}
+
+/* Newsletter Section Blink */
+.newsletter-section {
+    animation: blink 2s infinite;
+    animation-delay: 1s; /* Offset to create a subtle difference */
+}
+
+/* Actualites Section Blink */
+.info-section {
+    animation: blink 2s infinite;
+}
+/* Rest of the original CSS remains the same */
+.actualites {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #b6b9ba;
+}
+
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.card {
+    background-color: white;
+    padding: 10px;
+    border: 2px solid #00a89e;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.grande-card {
+    grid-column: 1 / 3;
+    grid-row: 1 / 3;
+}
+
+.petite-card {
+    grid-column: 3 / 4;
+    grid-row: span 1;
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.card p {
+    color: #333;
+    font-size: 1.2rem;
+    font-family: nerko;
+}
+
+.all-news-button {
+    margin-top: 20px;
+    background-color: #00a89e;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#message{
+    width: 60%;
+    padding: 50px;
+    margin: 50px auto;
+    border-radius: 10px;
+    border: none;
+    background-color: white;
+    box-shadow: 0px 0px 2px;
+}
+#message h3{
+    font-family: sansita;
+    font-size: 2rem;
+}
+#message p{
+    font-family: nerko;
+    font-size: 1.4rem;
+}
+#message p a{
+    color:lime;
+    font-size: 1.6rem;
+}
+#message p a:hover{
+    color: #FFD700;
+    transition: color 0.5s;
+}
+
+
+
+
+
+/* infos  !!!!!!!!!!!!*/
+
+/* Newsletter Section */
+.newsletter-section {
+    background-color:  #b6b9ba;
+    padding: 20px;
+    text-align: center;
+    background-image: url('background-pattern.png'); /* Pattern background */
+    background-size: cover;
+}
+
+.newsletter-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.newsletter-content {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.newsletter-content img {
+    max-width: 150px;
+    margin-right: 20px;
+    border-radius: 10px;
+}
+
+.newsletter-text h2 {
+    color: #0077b5;
+    font-family: lobster;
+    font-size: 2rem;
+    margin: 0 0 10px;
+}
+
+.newsletter-text p {
+    color: black;
+    font-size: 1.2rem;
+    font-family: lobster;
+    margin: 0 0 20px;
+}
+
+.newsletter-form {
+    display: flex;
+}
+
+.newsletter-form input {
+    font-size: 1.2rem;
+    font-family: lobster;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    flex: 1;
+}
+
+.newsletter-form button {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-form button:hover {
+    background-color: #0077b5;
+}
+
+/* Info Boxes Section */
+.info-section {
+    background-color:  #b6b8ba;;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.info-section h3 {
+    color: #0077b5;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    font-family: cookie;
+}
+
+.info-section p {
+    color: black;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+}
+
+.info-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.info-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    max-width: 300px;
+}
+
+.info-box i {
+    font-size: 3rem;
+    color: #0077b5;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    color: black;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+
+/*responsive  design*/
+@media (max-width: 768px){
+    .inf .newsletter-section{
+        width: 70%;
+    }
+    
+}
+
+
+
+/*Chat css party*/
+/* 📌 Style de la section flottante */
+.chat-section {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(20, 20, 20, 0.95);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: grab;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .chat-section:hover {
+            transform: scale(1.05);
+        }
+
+        /* 📌 Conteneur des boîtes */
+        .chat-boxes {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 📌 Style des boîtes */
+        .chat-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            position:static;
+            overflow: hidden;
+        }
+
+        /* 📌 Ajout d’un effet néon dynamique */
+        .chat-box::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 250%;
+            height: 250%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 10%, transparent 70%);
+            transition: all 0.4s ease-in-out;
+        }
+
+        .chat-box:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        /* 📌 Couleurs différentes */
+        .chat-box:nth-child(1) { background-color: #1abc9c; box-shadow: 0px 0px 15px #1abc9c; } /* Vert */
+        .chat-box:nth-child(2) { background-color: #3498db; box-shadow: 0px 0px 15px #3498db; } /* Bleu */
+        .chat-box:nth-child(3) { background-color: #e74c3c; box-shadow: 0px 0px 15px #e74c3c; } /* Rouge */
+
+        /* 📌 Effet au survol */
+        .chat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        /* 📌 Icônes Bootstrap */
+        .chat-box i {
+            font-size: 26px;
+        }
+
+        /* 📌 Style des liens */
+        .chat-box a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* 📌 Ajout d'un effet pulsant */
+        @keyframes pulse {
+            0% { box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3); }
+            50% { box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.5); }
+            100% { box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3); }
+        }
+
+        .chat-box:nth-child(1) { animation: pulse 2s infinite alternate; }
+        .chat-box:nth-child(2) { animation: pulse 2s infinite alternate-reverse; }
+        .chat-box:nth-child(3) { animation: pulse 2s infinite alternate; }
+
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav container">
+            <div class="nav__data">
+                <a href="#" class="nav__logo">
+                    <i class="ri-planet-line"></i> eCEP
+                </a>
+                
+                <div class="nav__toggle" id="nav-toggle">
+                    <div class="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!--=============== NAV MENU ===============-->
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li><a href="#" class="nav__link">Home</a></li>
+                    <li><a href="#" class="nav__link">eCEP</a></li>
+                    <li><a href="{% url 'home' %}" class="nav__link">Connexion</a></li>
+                </ul>
+            </div>
+            
+        </nav>
+    </header>
+
+
+<!--Section de page d'acceuil corps-->
+<section class="hero">
+  <div class="hero-content">
+    <h6>
+      Bienvenu sur eCEP
+    </h6>
+    <p>
+      Préparez votre CEP avec votre téléphone
+    </p>
+  </div>
+</section>
+
+
+
+<!--ACTUALITES-->
+<div class="actualites">
+    <div class="card-container">
+        <div class="card grande-card">
+            <img src="img/actualite.jpg" alt="">
+            
+            
+            <p>ESI acceuille une fois de plus les nouveaux bacheliers pour la rentrée en octobre 2024</p>
+        </div>
+        <div class="card petite-card">
+            <img src="img/salibrite.webp" alt="">
+            <p>Journée de salibrité sur le site du 22 prevue à une date ulterieure</p>
+        </div>
+        <div class="card petite-card">
+            <img src="img/etudiant.jpg" alt="">
+            <p>Guide de la rentrée étudiante 2024</p>
+        </div>
+    </div>
+    <a href="#" class="all-news-button">TOUTE L'ACTUALITÉ</a>
+</div>
+
+<section class="inf">
+       <!-- Newsletter Signup Section -->
+       <section class="newsletter-section">
+        <div class="newsletter-container">
+            <div class="newsletter-content">
+                <img src="img/NEWS.jpg" alt="Newsletter Image">
+                <div class="newsletter-text">
+                    <h2>INSCRIVEZ-VOUS À LA NEWSCAMPUS</h2>
+                    <p>POUR RECEVOIR LES ACTUALITÉS</p>
+                    <form class="newsletter-form" method="POST" action="newsletter.">
+                        <input type="email" placeholder="Entrez votre adresse mail" required>
+                        <button type="submit">JE M'INSCRIS</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Boxes Section -->
+    <section class="info-section">
+        <h3>POUR VOUS AIDER</h3>
+        <p>LES OUTILS CAMPUS</p>
+        <div class="info-boxes">
+            <div class="info-box">
+                <i class="icon icon-faq"></i>
+                <a href="#"><h4>FAQ</h4></a>
+            </div>
+            <div class="info-box">
+                <i class="icon icon-dossiers"></i>
+                <a href="#"><h4>DOSSIERS THÉMATIQUES</h4></a>
+            </div>
+            <div class="info-box">
+                <i class="icon icon-resources"></i>
+                <a href="#"><h4>RESSOURCES DOCUMENTAIRES</h4></a>
+            </div>
+        </div>
+    </section>
+</section>
+
+<!--Section de page d'acceuil corps-->
+<section class="students-section">
+  <div class="students-grid">
+    <div class="student-card">
+      <div class="student-image">
+        <img src="/api/placeholder/300/400" alt="Student 1" />
+        <div class="overlay">
+          <p>Sarah Martinez</p>
+          <span>Computer Science</span>
+        </div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-image">
+        <img src="/api/placeholder/300/400" alt="Student 2" />
+        <div class="overlay">
+          <p>Aimé SAWADOGO</p>
+          <span>Business Analytics</span>
+        </div>
+      </div>
+    </div>
+    <div class="student-card">
+      <div class="student-image">
+        <img src="/api/placeholder/300/400" alt="Student 3" />
+        <div class="overlay">
+          <p>Emma Thompson</p>
+          <span>Engineering</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="cta-container">
+    <form action="{% url 'home' %}" method="post">
+      {% csrf_token %}
+      <button class="campus-button" id="campusButton">
+        <span class="button-text">Se connecter</span>
+        <i class="ri-arrow-right-line"></i>
+      </button>
+    </form>
+  </div>
+</section>
+
+
+<!-- 📌 Sons pour les boîtes -->
+<audio id="chatSound" src="https://www.fesliyanstudios.com/play-mp3/4380"></audio>
+<audio id="forumSound" src="https://www.fesliyanstudios.com/play-mp3/4383"></audio>
+<audio id="assistantSound" src="https://www.fesliyanstudios.com/play-mp3/4394"></audio>
+
+<script>
+    // 📌 Permet de déplacer la section avec la souris
+    let chatSection = document.getElementById("chatSection");
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    chatSection.addEventListener("mousedown", function(e) {
+        isDragging = true;
+        offsetX = e.clientX - chatSection.getBoundingClientRect().left;
+        offsetY = e.clientY - chatSection.getBoundingClientRect().top;
+        chatSection.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mousemove", function(e) {
+        if (isDragging) {
+            chatSection.style.left = e.clientX - offsetX + "px";
+            chatSection.style.top = e.clientY - offsetY + "px";
+        }
+    });
+
+    document.addEventListener("mouseup", function() {
+        isDragging = false;
+        chatSection.style.cursor = "grab";
+    });
+
+    // 📌 Fonction pour jouer un son selon la boîte cliquée
+    function playSound(type) {
+        let sound;
+        if (type === 'chat') {
+            sound = document.getElementById("chatSound");
+        } else if (type === 'forum') {
+            sound = document.getElementById("forumSound");
+        } else if (type === 'assistant') {
+            sound = document.getElementById("assistantSound");
+        }
+
+        if (sound) {
+            sound.currentTime = 0;
+            sound.play();
+        }
+    }
+
+    // 📌 Fonction pour cacher/afficher la section
+    function toggleChat() {
+        let chatSection = document.getElementById("chatSection");
+        chatSection.style.display = (chatSection.style.display === "none") ? "block" : "none";
+    }
+</script>
+
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Université Nazi Boni</h4>
+                <p>Bobo Dioulasso, Burkina Faso</p>
+                <p>Courrier : 01 BP 1091 Bobo-Dioulasso 01</p>
+                <p>Email : <a href="mailto:upb@bf.edu">upb@bf.edu</a></p>
+                <p>Téléphone : <a href="tel:+22664584277">+226 64 58 42 77</a></p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Liens rapides</h4>
+                <ul>
+                    <li><a href="index.">Accueil</a></li>
+                    <li><a href="salles.">Salles</a></li>
+                    <li><a href="reservation.">Mes réservations</a></li>
+                    <li><a href="contacts.">Contacts</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/share/xzv1HjrxeEDnbGmt/?mibextid=LQQJ4d"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Informations légales</h4>
+                <ul>
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">Politique de confidentialité</a></li>
+                    <li><a href="#">Conditions d'utilisation</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2024 Université Nazi Boni. Tous droits réservés.</p>
+        </div>
+    </footer>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+  const navToggle = document.getElementById('nav-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const navClose = document.querySelector('.nav__close');
+  const navBurger = document.querySelector('.nav__burger');
+  const dropdownItems = document.querySelectorAll('.dropdown__item');
+
+  // Toggle menu
+  function toggleMenu(show) {
+    navMenu.classList.toggle('show-menu', show);
+    navClose.style.display = show ? 'block' : 'none';
+    navBurger.style.display = show ? 'none' : 'block';
+  }
+
+  navToggle.addEventListener('click', () => toggleMenu(!navMenu.classList.contains('show-menu')));
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
+      toggleMenu(false);
+    }
+  });
+
+  // Handle dropdowns
+  dropdownItems.forEach(item => {
+    const dropdownMenu = item.querySelector('.dropdown__menu');
+    
+    item.addEventListener('click', (e) => {
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+      }
+    });
+  });
+
+  // Handle window resize
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (window.innerWidth > 768) {
+        navMenu.style.top = '0';
+        document.querySelectorAll('.dropdown__menu').forEach(menu => menu.style.display = '');
+      }
+    }, 250);
+  });
+
+  // Campus button animation (if exists)
+  const campusButton = document.getElementById('campusButton');
+  if (campusButton) {
+    campusButton.addEventListener('mouseenter', () => campusButton.style.transform = 'translateY(-2px)');
+    campusButton.addEventListener('mouseleave', () => campusButton.style.transform = 'translateY(0)');
+  }
+});
+        
+        </script>
+</body>
+</html>
+

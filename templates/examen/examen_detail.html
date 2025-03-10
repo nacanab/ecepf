@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* styles.css */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% include 'snippets/messages.html' %}
+<h1>{{ examen.title }}</h1>
+<p>{{ examen.description }}</p>
+<p><strong>Date :</strong> {{ examen.date }}</p>
+<p><strong>Durée :</strong> {{ examen.duration }} minutes</p>
+<p><strong>Score :</strong> {{ examen.max_score }}</p>
+<p><strong>Score de passage :</strong> {{ examen.pass_mark }} minutes</p>
+
+<h2>Cours concernés</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Titre du cours</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in examen.courses.all %}
+        <tr>
+            <td>{{ course.title }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Questions</h2>
+{% if request.user.is_lecturer %}
+<a href="{% url 'question_create' examen.slug %}" class="button">Ajouter une question</a>
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>Contenu</th>
+            <th>Cours</th>
+            <th>Type</th>
+            <th>Score</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in examen.questions.all %}
+        <tr>
+            <td>{{ question.content }}</td>
+            <td>{{ question.course.title }}</td>
+            <td>{{ question.get_question_type_display }}</td>
+            <td>{{ question.score }}</td>
+            <td>
+                <a href="{% url 'question_update' question.id %}">Modifier</a>
+                <a href="{% url 'reponse_create' question.id %}">Détails</a>
+                <a href="{% url 'question_delete' question.id %}">Supprimer</a>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

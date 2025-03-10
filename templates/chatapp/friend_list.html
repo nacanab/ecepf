@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">Mes amis</h1>
+    <div class="row">
+        {% for friend in friends %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ friend.profile_picture }}" class="card-img-top" alt="{{ friend.username }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ friend.username }}</h5>
+                    <p class="card-text">
+                        {% if friend.is_online %}
+                            <span class="text-success">● En ligne</span>
+                        {% else %}
+                            <span class="text-secondary">● {{ friend.last_activity }}</span>
+                        {% endif %}
+                    </p>
+                    <a href="{% url 'chat_with_friend' friend.id %}" class="btn btn-primary">Envoyer un message</a>
+                    <form method="post" action="{% url 'remove_friend' friend.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
