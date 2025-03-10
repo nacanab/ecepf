@@ -276,24 +276,6 @@ STUDENT_ID_PREFIX = config("STUDENT_ID_PREFIX", "ele")
 LECTURER_ID_PREFIX = config("LECTURER_ID_PREFIX", "ens")
 
 
-# Constants
-YEARS = (
-    (1, "1"),
-    (2, "2"),
-    (3, "3"),
-    (4, "4"),
-    (5, "5"),
-    (6, "6"),
-)
-
-BACHELOR_DEGREE = "Bachelor"
-MASTER_DEGREE = "Master"
-
-LEVEL_CHOICES = (
-    (BACHELOR_DEGREE, _("Bachelor Degree")),
-    (MASTER_DEGREE, _("Master Degree")),
-)
-
 FIRST = "Premier"
 SECOND = "Deuxième"
 THIRD = "Troisième"

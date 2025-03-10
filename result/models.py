@@ -182,7 +182,6 @@ class Result(models.Model):
     cgpa = models.FloatField(null=True)
     semester = models.CharField(max_length=100, choices=settings.SEMESTER_CHOICES)
     session = models.CharField(max_length=100, blank=True, null=True)
-    level = models.CharField(max_length=25, choices=settings.LEVEL_CHOICES, null=True)
 
     def __str__(self):
         return f"Result for {self.student} - Semester: {self.semester}, Level: {self.level}"

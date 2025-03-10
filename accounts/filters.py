@@ -17,10 +17,10 @@ class LecturerFilter(django_filters.FilterSet):
 
         # Change html classes and placeholders
         self.filters["username"].field.widget.attrs.update(
-            {"class": "au-input", "placeholder": "ID No."}
+            {"class": "au-input", "placeholder": "Identifiant."}
         )
         self.filters["name"].field.widget.attrs.update(
-            {"class": "au-input", "placeholder": "Name"}
+            {"class": "au-input", "placeholder": "Nom"}
         )
         self.filters["email"].field.widget.attrs.update(
             {"class": "au-input", "placeholder": "Email"}
@@ -60,16 +60,13 @@ class StudentFilter(django_filters.FilterSet):
 
         # Change html classes and placeholders
         self.filters["id_no"].field.widget.attrs.update(
-            {"class": "au-input", "placeholder": "ID No."}
+            {"class": "au-input", "placeholder": "Identifiant"}
         )
         self.filters["name"].field.widget.attrs.update(
-            {"class": "au-input", "placeholder": "Name"}
+            {"class": "au-input", "placeholder": "Nom"}
         )
         self.filters["email"].field.widget.attrs.update(
             {"class": "au-input", "placeholder": "Email"}
-        )
-        self.filters["program"].field.widget.attrs.update(
-            {"class": "au-input", "placeholder": "Program"}
         )
 
     def filter_by_name(self, queryset, name, value):

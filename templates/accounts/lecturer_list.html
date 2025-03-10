@@ -28,14 +28,14 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th> {% trans 'ID No.' %}' </th>
-                <th> {% trans 'Full Name' %} </th>
+                <th> {% trans 'Identifiant' %}' </th>
+                <th> {% trans 'Nom complet' %} </th>
                 <th> {% trans 'Email' %} </th>
-                <th> {% trans 'Mob No.' %} </th>
-                <th> {% trans 'Address/city' %} </th>
-                <th> {% trans 'Last login' %}  </th>
+                <th> {% trans 'Numéro de téléphone' %} </th>
+                <th> {% trans 'Addresse/ville' %} </th>
+                <th> {% trans 'Dernière connexion' %}  </th>
                 {% if request.user.is_superuser %}
-                <th> {% trans 'Action' %} </th>
+                <th> {% trans 'Actions' %} </th>
                 {% endif %}
             </tr>
         </thead>
