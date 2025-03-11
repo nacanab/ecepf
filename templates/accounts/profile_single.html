@@ -11,7 +11,7 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{ user.get_full_name }}</li>
     </ol>
 </nav>
@@ -77,7 +77,7 @@
                     <p><strong>{% trans 'Nom' %}:</strong> {{ user.last_name|title }}</p>
                     <p><strong>{% trans 'Identifiant' %}:</strong> {{ user.username }}</p>
                 </div>
-                {% if user.is_student %}
+                {% if request.user.is_student %}
                 <hr>
                 <h1>Badges</h1>
                     <ul>
@@ -106,7 +106,7 @@
                     {% if current_semester and current_session %}
                     <p><strong>{% trans 'Année scolaire' %}:</strong> {{ current_semester }} {% trans 'Semester' %} {{ current_session }}</p>
                     {% endif %}
-                    <p><strong>{% trans 'Date d'inscription' %}:</strong> {{ user.date_joined|date }}</p>
+                    <p><strong>{% trans "Date d'inscription" %}:</strong> {{ user.date_joined|date }}</p>
                 </div>
             </div>
         </div>

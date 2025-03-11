@@ -8,7 +8,7 @@ import string
 
 
 def generate_password(length=12):
-    characters = string.ascii_letters + string.digits + string.punctuation
+    characters = string.ascii_letters + string.digits + ".@"
     password = ''.join(secrets.choice(characters) for _ in range(length))
     return password
 
@@ -59,7 +59,7 @@ def send_new_account_email(user, password):
     else:
         template_name = "accounts/email/new_lecturer_account_confirmation.html"
     email = {
-        "subject": "Your SkyLearn account confirmation and credentials",
+        "subject": "Vos informations de connexion",
         "recipient_list": [user.email],
         "template_name": template_name,
         "context": {"user": user, "password": password},

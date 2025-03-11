@@ -13,7 +13,7 @@
 				<img src="{% static 'img/brand.jpg' %}" width="210px" alt="SkyLearn">
 			</a>
 			<p class="mt-2 small">
-				{% if request.user.is_admin%}
+				{% if request.user.is_superuser %}
 					<mark class="bg-secondary text-light" style="border-radius: 2px; padding: 2px 5px;">
 						{% trans 'Administrateur' %}
 					</mark>
@@ -130,7 +130,7 @@
 				<a href="{% url 'semester_list' %}"><i class="fas fa-calendar-alt"></i>{% trans 'Trimestres' %}</a>
 			</li>
 
-			<li class="{% if request.path == sem %}active{% endif %}">
+			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list' %}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
 			</li>
 			{% endif %}
@@ -144,7 +144,7 @@
 				<a href="{% url 'lecturer_student_list' request.user.id%}"><i class="fas fa-user-graduate"></i>{% trans 'Mes étudiants' %}</a>
 			</li>
 
-			<li class="{% if request.path == sem %}active{% endif %}">
+			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list'%}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
 			</li>
 			{% endif %}
@@ -162,7 +162,7 @@
 			<li class="{% if request.path == cr %}active{% endif %}">
 				<a href="{% url 'course_registration' %}"><i class="fas fa-plus"></i>{% trans 'Add' %} &amp; {% trans 'Drop Course' %}</a>
 			</li>
-			<li class="{% if request.path == sem %}active{% endif %}">
+			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list' %}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
 			</li>
 			<li class="{% if request.path == '/fr/dictionnary/dictionnary' %}active{% endif %}">
@@ -184,7 +184,7 @@
 				<a href="{% url 'edit_profile' %}"><i class="fas fa-cogs"></i>{% trans 'Paramètre de compte' %}</a>
 			</li>
 			<li class="{% if request.path == cp %}active{% endif %}">
-				<a href="{% url 'change_password' %}"><i class="fas fa-key"></i>{% trans 'Changer de compte' %}</a>
+				<a href="{% url 'change_password' %}"><i class="fas fa-key"></i>{% trans 'Changer de mot de passe' %}</a>
 			</li>
 		</ul>
 	</div>

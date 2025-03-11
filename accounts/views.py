@@ -47,7 +47,7 @@ def render_to_pdf(template_name, context):
     template = render_to_string(template_name, context)
     pdf = pisa.CreatePDF(template, dest=response)
     if pdf.err:
-        return HttpResponse("We had some problems generating the PDF")
+        return HttpResponse("Nous rencontrons un probème pour générer le PDF")
     return response
 
 
@@ -79,7 +79,9 @@ def register(request,role):
         if request.method == "POST":
             form = StudentAddForm(request.POST)
             if form.is_valid():
-                form.save()
+                student=form.save()
+                full_name=student.get_full_name
+                email=student.email
                 messages.success(
                     request,
                     f"Un compte pour l'élève {full_name} a été créé. "
@@ -300,9 +302,9 @@ def profile_update(request):
         form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
-            messages.success(request, "Your profile has been updated successfully.")
+            messages.success(request, "Votre profil e été mis à jour.")
             return redirect("profile")
-        messages.error(request, "Please correct the error(s) below.")
+        messages.error(request, "SVP corrigez les erreurs.")
     else:
         form = ProfileUpdateForm(instance=request.user)
     return render(request, "setting/profile_info_change.html", {"form": form})
@@ -315,9 +317,9 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            messages.success(request, "Your password was successfully updated!")
+            messages.success(request, "Votre mot de passe a été bien mis à jour!")
             return redirect("profile")
-        messages.error(request, "Please correct the error(s) below.")
+        messages.error(request, "SVP corrigez les erreurs.")
     else:
         form = PasswordChangeForm(request.user)
     return render(request, "setting/password_change.html", {"form": form})
@@ -395,7 +397,7 @@ def edit_staff(request, pk):
         if form.is_valid():
             form.save()
             full_name = lecturer.get_full_name
-            messages.success(request, f"Lecturer {full_name} has been updated.")
+            messages.success(request, f"L'enseignant {full_name} a été mis à jour.")
             return redirect("lecturer_list")
         messages.error(request, "SVP corrigez les erreurs.")
     else:
@@ -430,7 +432,7 @@ def render_lecturer_pdf_list(request):
     html = template.render(context)
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
-        return HttpResponse(f"We had some errors <pre>{html}</pre>")
+        return HttpResponse(f"Nous avons quelques erreurs <pre>{html}</pre>")
     return response
 
 
@@ -484,7 +486,7 @@ def edit_student(request, pk):
             full_name = student_user.get_full_name
             messages.success(request, f"Student {full_name} has been updated.")
             return redirect("student_list")
-        messages.error(request, "SVP sorrigz les erreurs")
+        messages.error(request, "SVP sorrigez les erreurs")
     else:
         form = ProfileUpdateForm(instance=student_user)
     return render(
@@ -573,7 +575,7 @@ def render_student_pdf_list(request):
     html = template.render(context)
     pisa_status = pisa.CreatePDF(html, dest=response)
     if pisa_status.err:
-        return HttpResponse(f"We had some errors <pre>{html}</pre>")
+        return HttpResponse(f"Nous rencontrons quelques erreurs <pre>{html}</pre>")
     return response
 
 
@@ -621,7 +623,7 @@ class ParentAdd(CreateView):
     template_name = "accounts/parent_form.html"
 
     def form_valid(self, form):
-        messages.success(self.request, "Parent added successfully.")
+        messages.success(self.request, "Parent ajouté avec succès.")
         return super().form_valid(form)
 
 def save_firebase_token(request):

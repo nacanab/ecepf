@@ -144,9 +144,9 @@ def post_add(request):
                     notification_title = "Nouveau post ajouté"
                     notification_body = f"Un nouveau post a été ajouté : {title}"
                     send_push_notification(token, notification_title, notification_body)
-            messages.success(request, f"{title} has been uploaded.")
+            messages.success(request, f"{title} a été ajouté.")
             return redirect("home")
-        messages.error(request, "Please correct the error(s) below.")
+        messages.error(request, "SVP corrigez les erreurs.")
     else:
         form = NewsAndEventsForm()
     return render(request, "core/post_add.html", {"title": "Add Post", "form": form})
@@ -161,9 +161,9 @@ def edit_post(request, pk):
         title = form.cleaned_data.get("title", "Post") if form.is_valid() else None
         if form.is_valid():
             form.save()
-            messages.success(request, f"{title} has been updated.")
+            messages.success(request, f"{title} a été ajouté.")
             return redirect("home")
-        messages.error(request, "Please correct the error(s) below.")
+        messages.error(request, "SVP corrigez les erreurs.")
     else:
         form = NewsAndEventsForm(instance=instance)
     return render(request, "core/post_add.html", {"title": "Edit Post", "form": form})
@@ -200,7 +200,7 @@ def session_add_view(request):
             if form.cleaned_data.get("is_current_session"):
                 unset_current_session()
             form.save()
-            messages.success(request, "Session added successfully.")
+            messages.success(request, "Année scolaire ajouté.")
             return redirect("session_list")
     else:
         form = SessionForm()
@@ -217,7 +217,7 @@ def session_update_view(request, pk):
             if form.cleaned_data.get("is_current_session"):
                 unset_current_session()
             form.save()
-            messages.success(request, "Session updated successfully.")
+            messages.success(request, "Année scolaire mise à jour.")
             return redirect("session_list")
     else:
         form = SessionForm(instance=session)
@@ -229,10 +229,10 @@ def session_update_view(request, pk):
 def session_delete_view(request, pk):
     session = get_object_or_404(Session, pk=pk)
     if session.is_current_session:
-        messages.error(request, "You cannot delete the current session.")
+        messages.error(request, "Vous ne pouvez pas supprimer l'année scolaire en cours.")
     else:
         session.delete()
-        messages.success(request, "Session successfully deleted.")
+        messages.success(request, "Année scolaire supprimé avec succès.")
     return redirect("session_list")
 
 
@@ -264,7 +264,7 @@ def semester_add_view(request):
                 unset_current_semester()
                 unset_current_session()
             form.save()
-            messages.success(request, "Semester added successfully.")
+            messages.success(request, "Trimestre ajouté avec succès.")
             return redirect("semester_list")
     else:
         form = SemesterForm()
@@ -282,7 +282,7 @@ def semester_update_view(request, pk):
                 unset_current_semester()
                 unset_current_session()
             form.save()
-            messages.success(request, "Semester updated successfully!")
+            messages.success(request, "Trimestre mis à jour!")
             return redirect("semester_list")
     else:
         form = SemesterForm(instance=semester)
@@ -294,10 +294,10 @@ def semester_update_view(request, pk):
 def semester_delete_view(request, pk):
     semester = get_object_or_404(Semester, pk=pk)
     if semester.is_current_semester:
-        messages.error(request, "You cannot delete the current semester.")
+        messages.error(request, "Vous ne pouvez pas supprimer le trimestre actuel.")
     else:
         semester.delete()
-        messages.success(request, "Semester successfully deleted.")
+        messages.success(request, "Trimestre supprimé avec succès.")
     return redirect("semester_list")
 
 

@@ -1,15 +1,13 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{{ video.title }} | {% trans 'Learning management system' %}{% endblock title %}
+{% block title %}{{ video.title }} | {% trans 'eCEP' %}{% endblock title %}
 {% load static %}
 
 {% block content %}
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'programs' %}">{% trans 'Programs' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'program_detail' video.course.program.id %}">{{ video.course.program }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
         <li class="breadcrumb-item"><a href="{% url 'course_detail' video.course.slug %}">{{ video.course }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ video.title }}</li>
     </ol>
@@ -22,11 +20,11 @@
     <div class="">
         <video src="{{ video.video.url }}" controls></video>
     </div>
-    <p><i class="fas fa-calendar"></i> {{ video.timestamp|timesince }} {% trans 'ago' %}</p>
+    <p><i class="fas fa-calendar"></i>{% trans 'Il y a' %} {{ video.timestamp|timesince }}</p>
     {% if video.summary %}
     <p class="text-orange text-center">{{ video.summary }}</p>
     {% else %}
-    {% trans 'No video description set.' %}
+    {% trans 'Pas de description pour cette vidéo.' %}
     {% endif %}
 </div>
 
@@ -40,7 +38,7 @@
                     <div class="card">
                         <div class="card-body">
                             <strong>{{ comment.user.username }}</strong>
-                            <small class="text-muted"> - {{ comment.timestamp|timesince }} {% trans 'ago' %}</small>
+                            <small class="text-muted"> - {% trans 'ago' %} {{ comment.timestamp|timesince }}</small>
                             <p class="mt-2">{{ comment.content }}</p>
                         </div>
                     </div>
@@ -48,25 +46,21 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>{% trans 'No comments yet.' %}</p>
+        <p>{% trans 'Pas encore de commentaire' %}</p>
     {% endif %}
 </div>
 
 <!-- Formulaire pour ajouter un commentaire -->
 {% if request.user.is_authenticated %}
 <div class="mt-4">
-    <h4>{% trans 'Add a comment' %}</h4>
+    <h4>{% trans 'Ajouter un commentaire' %}</h4>
     <form method="post" action="{% url 'add_comment_to_video' video.id %}">
         {% csrf_token %}
         <div class="form-group">
-            <textarea name="content" class="form-control" rows="3" placeholder="{% trans 'Your comment...' %}" required></textarea>
+            <textarea name="content" class="form-control" rows="3" placeholder="{% trans 'Ton commentaire...' %}" required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+        <button type="submit" class="btn btn-primary">{% trans 'Envoyer' %}</button>
     </form>
-</div>
-{% else %}
-<div class="mt-4">
-    <p>{% trans 'You must be logged in to leave a comment.' %} <a href="{% url 'login' %}">{% trans 'Login here' %}</a></p>
 </div>
 {% endif %}
 

@@ -33,6 +33,17 @@ ALLOWED_HOSTS = ["127.0.0.1","localhost","192.168.100.8","192.168.11.104"]
 # change the default user models to our custom model
 AUTH_USER_MODEL = "accounts.User"
 
+CORS_ORIGIN_ALLOW_ALL = True  # Pour le développement seulement
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
 # Application definition
 
 DJANGO_APPS = [
@@ -46,6 +57,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'rest_framework',
     "forum",
     "mychatapp",
     "examen",

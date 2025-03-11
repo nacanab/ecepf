@@ -48,7 +48,7 @@ def add_score(request):
     ).first()
 
     if not current_session or not current_semester:
-        messages.error(request, "No active semester found.")
+        messages.error(request, "Pas de trimestre actif.")
         return render(request, "result/add_score.html")
 
     # semester = Course.objects.filter(
@@ -189,7 +189,7 @@ def add_score_for(request, id):
             #     Result.objects.get_or_create(student=student.student, gpa=gpa,
             # semester=current_semester, level=student.student.level)
 
-        messages.success(request, "Successfully Recorded! ")
+        messages.success(request, "Enregistré avec succès! ")
         return HttpResponseRedirect(reverse_lazy("add_score_for", kwargs={"id": id}))
     return HttpResponseRedirect(reverse_lazy("add_score_for", kwargs={"id": id}))
 

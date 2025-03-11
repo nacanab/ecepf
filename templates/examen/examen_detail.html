@@ -95,7 +95,7 @@
 </table>
 
 <h2>Questions</h2>
-{% if request.user.is_lecturer %}
+{% if request.user.is_lecturer or request.user.is_lecturer %}
 <a href="{% url 'question_create' examen.slug %}" class="button">Ajouter une question</a>
 {% endif %}
 <table>

@@ -6,7 +6,7 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
       <li class="breadcrumb-item active" aria-current="page">{% trans 'Liste d'années scolaires' %}</li>
     </ol>
 </nav>

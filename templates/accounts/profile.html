@@ -11,7 +11,7 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{ user.get_full_name }}</li>
     </ol>
 </nav>
@@ -46,7 +46,7 @@
                 {% if user.is_student %}
                 <p class="fw-bold"><i class="fas fa-medal"></i> {% trans 'Mes badges' %}</p>
                     <ul>
-                        {%if badges %}
+                        {% if badges %}
                         {% for attribution in badges %}
                             <li>
                                 <strong>{{ attribution.badge.nom }}</strong> - {{ attribution.badge.description }}
