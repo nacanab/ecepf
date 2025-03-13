@@ -11,7 +11,7 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
       <li class="breadcrumb-item active" aria-current="page">{{ user.get_full_name }}</li>
     </ol>
 </nav>
@@ -28,7 +28,15 @@
                     <li>{{ user.get_full_name|title }}</li>
                     <li><strong>{% trans 'Dernière connexion' %}: </strong>{{ user.last_login|date }}</li>
                     <li><strong>{% trans 'Rôle' %}: </strong>
-                        {{ user.get_user_role }}
+                        {% if user.is_student %}
+                            {% trans 'Elève' %}
+                        {% elif user.is_lecturer %}
+                            {% trans 'Enseignant' %}
+                        {% elif user.is_parent %}
+                            {% trans 'Parent' %}
+                        {% else %}
+                            {{ user.get_user_role}}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
@@ -77,19 +85,23 @@
                     <p><strong>{% trans 'Nom' %}:</strong> {{ user.last_name|title }}</p>
                     <p><strong>{% trans 'Identifiant' %}:</strong> {{ user.username }}</p>
                 </div>
-                {% if request.user.is_student %}
-                <hr>
-                <h1>Badges</h1>
+                {% if user.is_student %}
+                <p class="fw-bold"><i class="fas fa-medal"></i> {% trans 'Badges' %}</p>
                     <ul>
+                        {%if badges %}
                         {% for attribution in badges %}
                             <li>
                                 <strong>{{ attribution.badge.nom }}</strong> - {{ attribution.badge.description }}
                                 <img src="{{ attribution.badge.image.url }}" alt="{{ attribution.badge.nom }}" width="50" height="50">
                                 <small>(Obtenu le {{ attribution.date_attribution }})</small>
+                                <a href="{% url 'delete_badge' student.student.id attribution.id%}"><i class="fas fa-trash-alt text-danger"></i></a>
                             </li>
                         {% endfor %}
+                        {% else %}
+                            <div class="text-danger">Aucun badge</div>
+                        {% endif %}
                     </ul>
-                {% endif %}
+                    {% endif %}
     
                 <hr>
                 <p class="fw-bold"><i class="me-2 fas fa-phone-square-alt"></i>{% trans 'Contact' %}</p>

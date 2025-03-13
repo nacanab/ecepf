@@ -6,8 +6,8 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans 'Accueil' %}</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{% trans 'Liste d'années scolaires' %}</li>
+      <li class="breadcrumb-item"><a href="/">{% trans 'Accueil' %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{% trans "Liste d'années scolaires" %}</li>
     </ol>
 </nav>
 
@@ -17,7 +17,7 @@
 </div>
 {% endif %}
 
-<div class="title-1"><i class="fas fa-calendar-week"></i>{% trans 'Liste des années scolaires' %}</div>
+<div class="title-1"><i class="fas fa-calendar-week"></i>{% trans "Liste des années scolaires" %}</div>
 
 {% include 'snippets/messages.html' %}
 
@@ -26,9 +26,9 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th> {% trans 'Session' %} </th>
-                <th> {% trans 'Is Current Session' %} </th>
-                <th> {% trans 'Next Session Begins' %} </th>
+                <th> {% trans 'Années scolaires' %} </th>
+                <th> {% trans "Est l'année actuel" %} </th>
+                <th> {% trans 'Nouvelle année commence' %} </th>
                 {% if request.user.is_superuser %}
                 <th> {% trans 'Actions' %} </th>
                 {% endif %}
@@ -62,11 +62,11 @@
                   <td></td>
                   <td>
                   <span class="text-danger">
-                    {% trans 'No Session.' %}
+                    {% trans "Pas d'année scolaire" %}
                     {% if request.user.is_superuser %}
                     <a href="{% url 'add_session' %}">
                     <i class="primary" style="font-size: 22px;">
-                        {% trans 'Add Session Now.' %}
+                        {% trans "Ajouter une année scolaire" %}
                     </i>
                     {% endif %}
                     </a>
