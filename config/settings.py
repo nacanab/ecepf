@@ -41,7 +41,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',  # Autorise tout le monde
     ]
 }
 # Application definition
@@ -57,7 +57,6 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'rest_framework',
     "forum",
     "mychatapp",
     "examen",
@@ -89,7 +88,11 @@ PROJECT_APPS = [
 ]
 
 # Combine all apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + PROJECT_APPS+[
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -101,6 +104,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # whitenoise to serve static files
+    
+
+
+    'corsheaders.middleware.CorsMiddleware',
+
 
 ]
 
@@ -142,17 +150,28 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
+# DATABASES = {
 
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecep1",
-        "USER": "postgres",
-        "PASSWORD": "Nacanabo2004",
-        "HOST": "localhost",
-        "PORT": "5432",
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ecep1",
+#         "USER": "postgres",
+#         "PASSWORD": "Nacanabo2004",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
+
+#database avec sqlite
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+    
+
+
 
 # https://docs.djangoproject.com/en/stable/ref/settings/#std:setting-DEFAULT_AUTO_FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -284,8 +303,8 @@ LOGGING = {
 # WhiteNoise configuration
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-STUDENT_ID_PREFIX = config("STUDENT_ID_PREFIX", "ele")
-LECTURER_ID_PREFIX = config("LECTURER_ID_PREFIX", "ens")
+STUDENT_ID_PREFIX = config("STUDENT_ID_PREFIX", "eCEP-ele")
+LECTURER_ID_PREFIX = config("LECTURER_ID_PREFIX", "eCEP-ens")
 
 
 FIRST = "Premier"
@@ -297,3 +316,19 @@ SEMESTER_CHOICES = (
     (SECOND, _("Deuxième")),
     (THIRD, _("Troiième")),
 )
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost",
+    "http://10.18.232.9:8000",
+    "http://192.168.11.105",
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'origin',
+]

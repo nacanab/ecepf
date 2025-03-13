@@ -10,12 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '_all_'
 class StudentSerializer(serializers.ModelSerializer):
-    program = serializers.PrimaryKeyRelatedField(queryset=Program.objects.all(), required=False)
+    #program = serializers.PrimaryKeyRelatedField(queryset=Program.objects.all(), required=False)
 
     class Meta:
         model = User
         fields = [
-            'id','first_name', 'last_name', 'email', 'gender', 'phone', 'address', 'is_student', 'program'
+            'id','first_name', 'last_name', 'email', 'gender', 'phone', 'address', 'is_student'
         ]
         extra_kwargs = {
             'is_student': {'default': True},  # Forcer is_student à True
@@ -39,7 +39,7 @@ class StudentSerializer(serializers.ModelSerializer):
             is_student=True
         )
         user.set_password(password)
-        user.save()
+        user.save() #Je pense que ca seulement cree
 
         # Créer un étudiant
         # student = Student.objects.create(
@@ -77,6 +77,7 @@ class LecturerSerializer(serializers.ModelSerializer):
         # Générer un nom d'utilisateur et un mot de passe aléatoires
         username = validated_data['email']
         password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
+        
 
         user = User.objects.create_user(
             username=username,

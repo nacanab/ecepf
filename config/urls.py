@@ -8,7 +8,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 import os
 
-admin.site.site_header = "SkyLearn Admin"
+admin.site.site_header = "eCEP Administration"
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -30,8 +30,18 @@ urlpatterns = [
     path('mychatapp/', include("mychatapp.urls")),
     path('examen/', include("examen.urls")),
     path('badges/', include("badges.urls")),
+    path('api_accounts/', include('accounts.urls_api')),
+    
+    
+    
+    # flutter connexion
     path('api-auth/', include('rest_framework.urls')),
     path('api_accounts/', include('accounts.urls_api')),
+    
+    path('api_examen/', include('examen.urls_api')),
+    path('api_forum/', include('forum.urls_api')),
+    path('api_core/', include('core.urls_api')),
+    path('api_course/', include('course.urls_api')),
 ]
 
 

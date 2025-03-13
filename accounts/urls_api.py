@@ -7,7 +7,7 @@ from .views_api import (
     DepartmentHeadListCreateView, DepartmentHeadRetrieveUpdateDestroyView,
     UserSessionListCreateView, UserSessionRetrieveUpdateDestroyView,
     StudentLogsListCreateView, StudentLogsRetrieveUpdateDestroyView,
-    LoginAPIView, LogoutAPIView, LecturerCreateAPIView, ProfileAPIView, ProfileDetailAPIView
+    LoginAPIView, LogoutAPIView, LecturerCreateAPIView, ProfileAPIView,MyProfileAPIView
 )
 
 urlpatterns = [
@@ -30,9 +30,11 @@ urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='api_login'),
     path('logout/', LogoutAPIView.as_view(), name='api_logout'),
     #Profile
-    path('profile/', ProfileAPIView.as_view(), name='profile_api'),
-    path('profile/<int:pk>/', ProfileDetailAPIView.as_view(), name='profile_detail_api'),
-
+    path('profile/', ProfileAPIView.as_view(), name='profiles'),
+    #path('profile/<int:pk>/', ProfileDetailAPIView.as_view(), name='profile_detail_api'),
+    
+    path('profile/<int:pk>/', ProfileAPIView.as_view(), name='profile-detail'),
+    path('my-profile/', MyProfileAPIView.as_view(), name='my-profile'),
     # Route API pour la création de Lecturer
     path('lecturer/create/', LecturerCreateAPIView.as_view(), name='lecturer-create'),
 ]
