@@ -146,7 +146,7 @@ def question_delete(request, question_id):
 def reponse_create(request, question_id):
     question = get_object_or_404(QuestionExamen, id=question_id)
     if request.method == "POST":
-        form = ReponseExamenForm(request.POST)
+        form = ReponseExamenForm(request.POST,question=question)
         if form.is_valid():
             reponse = form.save(commit=False)
             reponse.question = question
