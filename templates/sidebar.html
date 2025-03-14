@@ -89,7 +89,11 @@
 			</li>
 			
 			{% endif %}
-
+			{% if request.user.is_student%}
+				<li class="{% if request.path == pro %}active{% endif %}">
+				<a href="{% url 'program_detail' %}"><i class="fas fa-book-open"></i>{% trans 'Cours' %}</a>
+			</li>
+			{% endif %}
 			{% if request.user.is_lecturer or request.user.is_student %}
 			<li class="{% if request.path == ucl %}active{% endif %}">
 				<a href="{% url 'user_course_list' %}"><i class="fas fa-book"></i>{% trans 'Mes cours' %}</a>
