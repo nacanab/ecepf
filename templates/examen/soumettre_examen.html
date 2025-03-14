@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Passer un examen | eCEP {% endblock %}
+{% block content %}
+<style>
+    .container1 {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    p {
+        text-align: center;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .a:hover {
+        text-decoration: underline;
+    }
+
+    .form1 {
+        margin-top: 20px;
+    }
+
+    .form1 label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form1 textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        resize: vertical;
+    }
+
+    .bt1 {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .bt1:hover {
+        background-color: #218838;
+    }
+
+    .error-message {
+        color: red;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .success-message {
+        color: green;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item">Examen</li>
+        <li class="breadcrumb-item active" aria-current="page">Soumission de l'examen {{ examen.title }}</li>
+    </ol>
+</nav>
+
+<div class="container1">
+    <h2>Soumission de l'examen : {{ examen.title }}</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if epreuve.file %}
+        <p>
+            Téléchargez le fichier de l'examen ici :  
+            <a class='a' href="{{ epreuve.file.url }}" download>📥 Télécharger</a>
+        </p>
+
+        <form method="post" class="form1" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="id_reponse_text">Votre réponse :</label>
+            <textarea id="id_reponse_text" name="reponse_text" rows="6" placeholder="Entrez votre réponse ici..." required></textarea>
+            <button type="submit" class='bt1'>📤 Envoyer la réponse</button>
+        </form>
+    {% else %}
+        <p style="color: red;">⚠ Aucun fichier attaché pour cet examen.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

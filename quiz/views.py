@@ -187,47 +187,6 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-@method_decorator([login_required, lecturer_required], name="dispatch")
-class QuizMarkingList(ListView):
-    model = Sitting
-    template_name = "quiz/quiz_marking_list.html"
-
-    def get_queryset(self):
-        queryset = Sitting.objects.filter(complete=True)
-        if not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                quiz__course__allocated_course__lecturer__pk=self.request.user.id
-            )
-        quiz_filter = self.request.GET.get("quiz_filter")
-        if quiz_filter:
-            queryset = queryset.filter(quiz__title__icontains=quiz_filter)
-        user_filter = self.request.GET.get("user_filter")
-        if user_filter:
-            queryset = queryset.filter(user__username__icontains=user_filter)
-        return queryset
-
-
-@method_decorator([login_required, lecturer_required], name="dispatch")
-class QuizMarkingDetail(DetailView):
-    model = Sitting
-    template_name = "quiz/quiz_marking_detail.html"
-
-    def post(self, request, *args, **kwargs):
-        sitting = self.get_object()
-        question_id = request.POST.get("qid")
-        if question_id:
-            question = Question.objects.get_subclass(id=int(question_id))
-            if int(question_id) in sitting.get_incorrect_questions:
-                sitting.remove_incorrect_question(question)
-            else:
-                sitting.add_incorrect_question(question)
-        return self.get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["questions"] = self.object.get_questions(with_answers=True)
-        return context
-
 
 # ########################################################
 # Quiz Taking View
@@ -244,7 +203,7 @@ class QuizTake(FormView):
         self.quiz = get_object_or_404(Quiz, slug=self.kwargs["slug"])
         self.course = get_object_or_404(Course, pk=self.kwargs["pk"])
         if not Question.objects.filter(quiz=self.quiz).exists():
-            messages.warning(request, "Ce quiz n'a pas de questions disponible.")
+            messages.warning(request, "Ce quiz n'a pas de question.")
             return redirect("quiz_index", slug=self.course.slug)
 
         self.sitting = Sitting.objects.user_sitting(
@@ -253,7 +212,7 @@ class QuizTake(FormView):
         if not self.sitting:
             messages.info(
                 request,
-                "Vous avez déja complété ce quiz. Une seul tentantive est permise",
+                "Vous avez déjà participé à ce quiz",
             )
             return redirect("quiz_index", slug=self.course.slug)
 
@@ -337,8 +296,7 @@ class QuizTake(FormView):
             results["incorrect_questions"] = self.sitting.get_incorrect_questions
 
         if (
-            not self.quiz.exam_paper
-            or self.request.user.is_superuser
+            self.request.user.is_superuser
             or self.request.user.is_lecturer
         ):
             self.sitting.delete()

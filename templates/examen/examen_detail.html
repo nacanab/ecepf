@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Détails d'examen | eCEP {% endblock %}
 {% block content %}
 <style>
     /* styles.css */
@@ -11,6 +12,39 @@
 
     h1, h2 {
         color: #333;
+    }
+
+    .exam-details {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .exam-details p {
+        margin: 10px 0;
+        font-size: 16px;
+    }
+
+    .exam-details strong {
+        color: #555;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
     }
 
     table {
@@ -41,87 +75,126 @@
         background-color: #f1f1f1;
     }
 
-    a {
+    .dropdown-menu {
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item {
+        padding: 8px 16px;
+        color: #333;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .breadcrumb {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb a {
         color: #007bff;
         text-decoration: none;
     }
 
-    a:hover {
+    .breadcrumb a:hover {
         text-decoration: underline;
     }
-
-    .button {
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .button:hover {
-        background-color: #0056b3;
-    }
-
-    .form-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
 </style>
+
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Examen</li>
+        <li class="breadcrumb-item active" aria-current="page">Détails de l'examen : {{ examen.title }}</li>
+    </ol>
+</nav>
+
 {% include 'snippets/messages.html' %}
-<h1>{{ examen.title }}</h1>
-<p>{{ examen.description }}</p>
-<p><strong>Date :</strong> {{ examen.date }}</p>
-<p><strong>Durée :</strong> {{ examen.duration }} minutes</p>
-<p><strong>Score :</strong> {{ examen.max_score }}</p>
-<p><strong>Score de passage :</strong> {{ examen.pass_mark }} minutes</p>
 
-<h2>Cours concernés</h2>
+<div class="exam-details">
+    <p><strong>Description :</strong> {{ examen.description }}</p>
+    <p><strong>Date :</strong> {{ examen.date|date:"d F Y" }}</p>
+    <p><strong>Moyenne de passage :</strong> {{ examen.pass_mark }}</p>
+
+    {% if request.user.is_lecturer or request.user.is_superuser %}
+        <a href="{% url 'epreuve_create' examen.slug %}" class="button">Ajouter une Épreuve</a>
+    {% endif %}
+</div>
+
 <table>
     <thead>
         <tr>
-            <th>Titre du cours</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for course in examen.courses.all %}
-        <tr>
-            <td>{{ course.title }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<h2>Questions</h2>
-{% if request.user.is_lecturer or request.user.is_superuser %}
-<a href="{% url 'question_create' examen.slug %}" class="button">Ajouter une question</a>
-{% endif %}
-<table>
-    <thead>
-        <tr>
-            <th>Contenu</th>
-            <th>Cours</th>
-            <th>Type</th>
-            <th>Score</th>
+            <th>Titre</th>
+            <th>Note maximale</th>
+            <th>Durée</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for question in examen.questions.all %}
+        {% for epreuve in examen.epreuves.all %}
         <tr>
-            <td>{{ question.content }}</td>
-            <td>{{ question.course.title }}</td>
-            <td>{{ question.get_question_type_display }}</td>
-            <td>{{ question.score }}</td>
+            <td>{{ epreuve.course.title }}</td>
+            <td>{{ epreuve.max_score }}</td>
+            <td>{{ epreuve.duration }} minutes</td>
             <td>
-                <a href="{% url 'question_update' question.id %}">Modifier</a>
-                <a href="{% url 'reponse_create' question.id %}">Détails</a>
-                <a href="{% url 'question_delete' question.id %}">Supprimer</a>
-                
+                {% if user.is_student %}
+                    <a href="{% url 'take_examen' epreuve.id %}" class="button">Passer</a>
+                    <a href="{% url 'epreuve_results' epreuve.id %}" class="button">Résultats</a>
+                {% elif user.is_lecturer %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {% if epreuve.is_active %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_activation' epreuve.id %}">Désactiver</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_activation' epreuve.id %}">Activer</a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'epreuve_results' epreuve.id %}">Résultats</a></li>
+                            {% if epreuve.file %}
+                                <li><a class="dropdown-item" href="{% url 'correction_examens' epreuve.id %}">Correction</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_detail' epreuve.id %}">Questions</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% else %}
+                    <div class="dropdown">
+                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-ellipsis-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'epreuve_update' epreuve.id %}">Modifier</a></li>
+                            <li><a class="dropdown-item" href="{% url 'epreuve_delete' epreuve.id %}">Supprimer</a></li>
+                            <li><a class="dropdown-item" href="{% url 'epreuve_results' epreuve.id %}">Résultats</a></li>
+                            {% if epreuve.file %}
+                                <li><a class="dropdown-item" href="{% url 'correction_examens' epreuve.id %}">Correction</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_detail' epreuve.id %}">Questions</a></li>
+                            {% endif %}
+                            {% if epreuve.is_active %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_activation' epreuve.id %}">Désactiver</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'epreuve_activation' epreuve.id %}">Activer</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
             </td>
         </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">Aucune épreuve disponible.</td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>

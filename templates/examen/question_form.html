@@ -41,16 +41,6 @@
         {% endif %}
     </div>
 
-    <!-- Champ pour sélectionner le cours associé -->
-    <div class="form-group">
-        <label for="{{ form.course.id_for_label }}" class="form-label">Cours associé</label>
-        {{ form.course }}
-        {% if form.course.errors %}
-            <div class="text-danger error-message">
-                {{ form.course.errors }}
-            </div>
-        {% endif %}
-    </div>
 
     <!-- Bouton de soumission -->
     <button type="submit" class="btn btn-primary submit-button">Enregistrer</button>

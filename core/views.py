@@ -5,9 +5,10 @@ from django.contrib.auth.decorators import login_required
 from accounts.decorators import admin_required, lecturer_required,parent_required
 from accounts.models import User, Student, Lecturer, UserProfile
 from config.firebase_utils import send_push_notification
+from examen.models import Examen
 from .forms import SessionForm, SemesterForm, NewsAndEventsForm
 from .models import NewsAndEvents, ActivityLog, Session, Semester
-from course.models import Course,CourseAllocation
+from course.models import Course,CourseAllocation, Upload, UploadVideo
 from accounts.models import UserSession
 from django.utils import timezone
 from accounts.models import Parent
@@ -43,6 +44,11 @@ def dashboard_view(request):
         "males_count": gender_count["M"],
         "females_count": gender_count["F"],
         "logs": logs,
+        "parents_count": Parent.objects.all().count(),
+        "fiches":Upload.objects.all().count(),
+        "videos":UploadVideo.objects.all().count(),
+        "quiz":Quiz.objects.all().count(),
+        "examen":Examen.objects.all().count(),
     }
     return render(request, "core/dashboard.html", context)
 

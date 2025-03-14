@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Correction d'epxamen | eCEP {% endblock %}
 {% block content %}
 <style>
     body {
@@ -54,6 +55,14 @@
         background: linear-gradient(135deg, #5a4cd1, #8c82f8);
     }
 </style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Examen</li>
+      <li class="breadcrumb-item active" aria-current="page">création d'examen</li>
+    </ol>
+</nav>
+
 {% include 'snippets/messages.html' %}
 
 <h1>{{ title }}</h1>
@@ -94,27 +103,6 @@
         {% endif %}
     </div>
 
-    <!-- Champ pour la durée de l'examen -->
-    <div class="form-group">
-        <label for="{{ form.duration.id_for_label }}">Durée (en minutes)</label>
-        {{ form.duration }}
-        {% if form.duration.errors %}
-            <div class="text-danger">
-                {{ form.duration.errors }}
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Champ pour le score maximum -->
-    <div class="form-group">
-        <label for="{{ form.max_score.id_for_label }}">Score maximum</label>
-        {{ form.max_score }}
-        {% if form.max_score.errors %}
-            <div class="text-danger">
-                {{ form.max_score.errors }}
-            </div>
-        {% endif %}
-    </div>
 
     <!-- Champ pour le score de passage -->
     <div class="form-group">
@@ -123,28 +111,6 @@
         {% if form.pass_mark.errors %}
             <div class="text-danger">
                 {{ form.pass_mark.errors }}
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Champ pour le fichier d'examen -->
-    <div class="form-group">
-        <label for="{{ form.file.id_for_label }}">Fichier d'examen</label>
-        {{ form.file }}
-        {% if form.file.errors %}
-            <div class="text-danger">
-                {{ form.file.errors }}
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Champ pour sélectionner les cours associés -->
-    <div class="form-group">
-        <label for="{{ form.courses.id_for_label }}">Cours associés</label>
-        {{ form.courses }}
-        {% if form.courses.errors %}
-            <div class="text-danger">
-                {{ form.courses.errors }}
             </div>
         {% endif %}
     </div>

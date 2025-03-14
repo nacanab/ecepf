@@ -1,40 +1,33 @@
 from django import forms
-from .models import Examen, QuestionExamen, ReponseExamen
+from .models import Epreuve, Examen, QuestionExamen, ReponseExamen, ResultatExamen
 from course.models import Course
 
 class ExamenForm(forms.ModelForm):
     date = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),  # Utilisez le type HTML5 'date'
     )
-    courses = forms.ModelMultipleChoiceField(
-        queryset=Course.objects.all(),  # Récupère tous les cours disponibles
-        widget=forms.CheckboxSelectMultiple,  # Permet la sélection multiple
-        label="Cours associés",  # Libellé du champ
-    )
+
 
     class Meta:
         model = Examen
-        fields = ["courses", "title", "description", "date", "duration", "max_score", "pass_mark", "file"]
+        fields = ["title", "description", "date", "pass_mark", ]
 
+class EpreuveForm(forms.ModelForm):
+    class Meta:
+        model = Epreuve
+        fields = ["course", "duration", "max_score","file"]
+        
 class QuestionExamenForm(forms.ModelForm):
-    course = forms.ModelChoiceField(
-        queryset=Course.objects.all(),  # Récupère tous les cours disponibles
-        label="Cours associé",  # Libellé du champ
-    )
-
     class Meta:
         model = QuestionExamen
-        fields = ["course", "content", "question_type", "score"]
+        fields = ["epreuve", "content", "question_type", "score"]
 
-class ExamenActivationForm(forms.ModelForm):
+
+class EpreuveActivationForm(forms.ModelForm):
     class Meta:
-        model = Examen
+        model = Epreuve
         fields = ['is_active']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['is_active'].label = "Activer l'examen"
-        self.fields['is_active'].widget = forms.CheckboxInput()
 
 class ReponseExamenForm(forms.ModelForm):
     class Meta:
@@ -67,14 +60,15 @@ class ReponseExamenForm(forms.ModelForm):
                     widget=forms.TextInput,
                     label="Entrez votre réponse"
                 )
+                
+class ResultatExamenForm(forms.ModelForm):
+    class Meta:
+        model = ResultatExamen
+        fields = ['reponse_text']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        question = self.instance.question if hasattr(self, 'instance') else None
+    def __init__(self, *args, **kwargs):
+        epreuve = kwargs.pop('epreuve', None)
+        super(ResultatExamenForm, self).__init__(*args, **kwargs)
 
-        if question and question.question_type == "short_answer":
-            reponse = cleaned_data.get('reponse')
-            if not reponse or reponse.strip() == "":
-                raise forms.ValidationError("Veuillez entrer une réponse.")
-        
-        return cleaned_data
+        if not epreuve or not epreuve.file:  # Désactive le champ si pas de fichier
+            self.fields['reponse_text'].widget = forms.HiddenInput()

@@ -34,7 +34,7 @@
         </div>
         <div class="ms-auto">
             <a class="btn btn-sm btn-warning" href="{% url 'quiz_index' course.slug %}"><i class="fas fa-list"></i>
-                {% trans 'Traiter un exercice' %}
+                {% trans 'Quizzes' %}
             </a>
         </div>
     </div>
@@ -134,7 +134,7 @@
                             <th>{% trans 'Nom du fichier' %}</th>
                             <th>{% trans "Date d'ajout" %}</th>
                             <th>{% trans 'Date de mise à jour' %}</th>
-                            <th>{% trans 'Downloads' %}</th>
+                            <th>{% trans 'Téléchargements' %}</th>
                             {% if request.user.is_superuser or request.user.is_lecturer %}
                             <th>{% trans 'Actions' %}</th>
                             {% endif %}
@@ -154,7 +154,7 @@
                             <th>
                                 <div>
                                     <a class="download-btn" href="{{ file.file.url }}" title="Download to your device">
-                                        <i class="fas fa-download me-1"></i>{% trans 'Download' %}</a>
+                                        <i class="fas fa-download me-1"></i>{% trans 'Télécharger' %}</a>
                                 </div>
                             </th>
 
@@ -217,7 +217,6 @@
                         {% endif %}
                         <h5 class="fw-bold mb-0">{{ lecturer|title }}</h5>
                         <p class="mb-0">{{ lecturer.lecturer.email }}</p>
-                        <p class="text-muted small">Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod.</p>
                         <p>
                             <a class="btn btn-sm btn-secondary" href="#" role="button"><i
                                     class="fab fa-twitter"></i></a>

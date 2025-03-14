@@ -4,26 +4,23 @@
 {% load quiz_tags %}
 
 
-{% block title %} {{ quiz.title}} | {% trans 'Learning management system' %} {% endblock %}
-{% block description %} {% trans "Quiz Results for" %} {{ quiz.title }} {% endblock %}
+{% block title %} {{ quiz.title}} | eCEP {% endblock %}
 
 {% block content %}
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-		<li class="breadcrumb-item"><a href="{% url 'programs' %}">{% trans 'Programs' %}</a></li>
-		<li class="breadcrumb-item"><a href="{% url 'program_detail' course.program.id %}">{{ course.program }}</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
 		<li class="breadcrumb-item"><a href="{{ course.get_absolute_url }}">{{ course }}</a></li>
 		<li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">{% trans 'Quizzes' %}</a></li>
 		<li class="breadcrumb-item"><a href="{% url 'quiz_take' course.id quiz.slug %}">{{ quiz.title|title }}</a></li>
-		<li class="breadcrumb-item active" aria-current="page">{% trans 'Result' %}</li>
+		<li class="breadcrumb-item active" aria-current="page">Résultat</li>
 	</ol>
 </nav>
 
 <div id="progress-card">
   <div class="col-md-6 mx-auto">
-    <h5 class="lead">{% trans 'Calculating your result...' %}</h5>
+    <h5 class="lead">{% trans 'Calculons vos résultats...' %}</h5>
     <div class="progress">
       <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
     </div>
@@ -33,9 +30,9 @@
 <div class="container" id="progress-main">
   {% if previous.answers %}
     <div class="card bg-white p-3">
-        <p class="muted"><small>{% trans "The previous question" %}:</small></p>
+        <p class="muted"><small>{% trans "La question précédente" %}:</small></p>
         <p>{{ previous.previous_question }}</p>
-        <p class="mb-0">Your answer was
+        <p class="mb-0">Votre réponse était
         <strong>
             {{ previous.previous_outcome|yesno:"correct,incorrect" }}
         </strong>
@@ -49,7 +46,7 @@
                 {% if answer.correct %}
                   <tr class="success">
                     <td>{{ answer }}</td>
-                  <td class="text-success"><strong>{% trans "This is the correct answer" %}</strong></td>
+                  <td class="text-success"><strong>{% trans "Voici la bonne réponse" %}</strong></td>
                   </tr>
                 {% else %}
                   <tr>
@@ -57,7 +54,7 @@
                     <td>
                     {% if previous.question_type.MCQuestion %}
                       {% if answer.id|add:"0" == previous.previous_answer|add:"0" %}
-                        {% trans "This was your answer." %}
+                        {% trans "Voici votre réponse" %}
                       {% endif %}
                     {% endif %}
                     </td>
@@ -69,18 +66,18 @@
 
           {% if user_was_incorrect %}
             <div class="text-danger">
-              <strong>{% trans "You answered the above question incorrectly" %}</strong>
+              <strong>{% trans "Vous avec mal répondu à la question" %}</strong>
             </div>
           {% endif %}
 
         {% endif %}
 
-        <p><strong>{% trans "Explanation" %}:</strong></p>
+        <p><strong>{% trans "Explication" %}:</strong></p>
         <p class="p-2" style="background-color: #fcf8e3;">
           {% if previous.previous_question.explanation %}
             {{ previous.previous_question.explanation }}
           {% else %}
-            {% trans "No explanation set to this question." %}
+            {% trans "Aucun explication pour cette question" %}
           {% endif %}
         </p>
         <hr>
@@ -91,14 +88,14 @@
   {% if max_score %}
 
   <div class="card bg-white p-3">
-    <div class="header-title-xl text-center">{% trans "Quiz result" %}</div>
+    <div class="header-title-xl text-center">{% trans "Résultat du quiz" %}</div>
     <div class="title-line"></div>
 	<p class="text-center">
-	  <small class="muted">{% trans "Quiz title" %}: </small>
+	  <small class="muted">{% trans "Titre du quiz" %}: </small>
 	  <strong>{{ quiz.title }}</strong></p>
 
 	<p class="lead text-center">
-	  {% trans "You answered" %} {{ score }} {% trans "questions correctly out of" %} {{ max_score }}, {% trans "giving you" %} {{ percent }}{% trans "% correct" %}
+	  {% trans "Vous avez eu" %} {{ score }} {% trans "questions sur" %} {{ max_score }}, {% trans "vous donnant" %} {{ percent }}{% trans "% correct" %}
     </p>
 
     <div class="score-wrapper mx-auto">
@@ -112,11 +109,10 @@
     <p class="lead bg-light p-3 text-orange"><span class="fa-1x">&CircleDot;</span> {{ sitting.result_message }}</p>
     {% endif %}
     <ul>
-      <li>{% trans "Review the questions below and try the quiz again in the future"%}.</li>
+      <li>{% trans "Rééssayez"%}.</li>
       <li>
-        {% trans "The result of this quiz will be stored in your progress section" %} 
-        <a class="text-primary" href="{% url 'quiz_progress' %}">Here</a> 
-        {% trans "so you can review and monitor your progression" %}.
+        {% trans "Vous pouvez voir vos résultats dans la section 'progrès'" %} 
+        <a class="text-primary" href="{% url 'quiz_progress' %}">Ici</a> 
       </li>
     </ul>
 
@@ -129,7 +125,7 @@
   {% if possible %}
 
   <p class="lead">
-	{% trans "Your session score is" %} {{ session }} {% trans "out of a possible" %} {{ possible }}
+	{% trans "Votre note l'anné" %} {{ session }} {% trans "sur" %} {{ possible }}
   </p>
 
   <hr>
@@ -145,21 +141,21 @@
 		    {{ forloop.counter }}, {{ question.content }}
 	    </p>
 
-	  <p><strong>{% trans "Explanation" %}:</strong></p>
+	  <p><strong>{% trans "Explication" %}:</strong></p>
     {% if question.explanation %}
     <p class="p-2 alert alert-info">
       {{ question.explanation|safe }}
     </p>
     {% else %}
     <p class="p-2 alert alert-warning">
-      {% trans "No explanation set for this question." %}
+      {% trans "Aucune explication" %}
     </p>
     {% endif %}
     
     {% correct_answer_for_all question %}
     
     {% if question.user_answer %}
-    <p><span class="bg-secondary px-3 py-1 text-light">{% trans "Your answer" %}: {{ question|answer_choice_to_string:question.user_answer }}</span></p>
+    <p><span class="bg-secondary px-3 py-1 text-light">{% trans "Votre réponse" %}: {{ question|answer_choice_to_string:question.user_answer }}</span></p>
     {% endif %}
 
     <hr>

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Résultats d'epreuve | eCEP {% endblock %}
+{% block content %}
+<style>
+    /* styles.css */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Examen</li>
+      <li class="breadcrumb-item active" aria-current="page">Résultat de l'epreuve {{ epreuve.course.title }}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Étudiant</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result.student.student.get_full_name }}</td>
+                {% if result.score %}
+                    <td>{{ result.score }}</td>
+                {% else %}
+                    <td class="text-danger">pas encore de note</td>
+                {% endif %}s
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Les résultats ne sont pas encore disponibles.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

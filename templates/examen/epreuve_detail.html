@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Détails d'epreuve | eCEP {% endblock %}
+{% block content %}
+<style>
+    /* styles.css */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Examen</li>
+      <li class="breadcrumb-item active" aria-current="page">Détails de l'examen{{ examen.title }}</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+{% if request.user.is_lecturer or request.user.is_superuser %}
+<a href="{% url 'question_create' epreuve.id %}" class="button">Ajouter une question</a>
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>Contenu</th>
+            <th>Cours</th>
+            <th>Type</th>
+            <th>Score</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in epreuve.questions.all %}
+        <tr>
+            <td>{{ question.content }}</td>
+            <td>{{ question.course.title }}</td>
+            <td>{{ question.get_question_type_display }}</td>
+            <td>{{ question.score }}</td>
+            <td>
+                <a href="{% url 'question_update' question.id %}">Modifier</a>
+                <a href="{% url 'reponse_create' question.id %}">Détails</a>
+                <a href="{% url 'question_delete' question.id %}">Supprimer</a>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

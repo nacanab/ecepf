@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Liste d'examens | eCEP {% endblock %}
 {% block content %}
 
 <style>
@@ -12,6 +13,29 @@
 
     h1, h2 {
         color: #333;
+    }
+
+    .exam-list-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
     }
 
     table {
@@ -42,91 +66,101 @@
         background-color: #f1f1f1;
     }
 
-    a {
+    .dropdown-menu {
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item {
+        padding: 8px 16px;
+        color: #333;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .breadcrumb {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb a {
         color: #007bff;
         text-decoration: none;
     }
 
-    tbody a:hover {
+    .breadcrumb a:hover {
         text-decoration: underline;
     }
-
-    .button {
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .button:hover {
-        background-color: #0056b3;
-    }
-
-    .form-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
 </style>
-{% include 'snippets/messages.html' %}
-<h1>Liste des examens</h1>
-{% if user.is_superuser %}
-<a href="{% url 'examen_create' %}" class="button">Créer un nouvel examen</a>
 
-{% endif %}
-<table>
-    <thead>
-        <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Durée (minutes)</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for examen in examens %}
-        <tr>
-            <td>{{ examen.title }}</td>
-            <td>{{ examen.description }}</td>
-            <td>{{ examen.date }}</td>
-            <td>{{ examen.duration }}</td>
-            <td>
-                {% if user.is_student %}
-                    {% if examen.is_active%}
-                        <a href="{% url 'take_examen' examen.slug %}">Passer</a>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Examen</li>
+        <li class="breadcrumb-item active" aria-current="page">Liste des examens</li>
+    </ol>
+</nav>
+
+{% include 'snippets/messages.html' %}
+
+<div class="exam-list-container">
+
+    {% if user.is_superuser %}
+        <a href="{% url 'examen_create' %}" class="button">Créer un nouvel examen</a>
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for examen in examens %}
+            <tr>
+                <td>{{ examen.title }}</td>
+                <td>{{ examen.description }}</td>
+                <td>{{ examen.date|date:"d F Y" }}</td>
+                <td>
+                    {% if user.is_student %}
+                        <a href="{% url 'examen_detail' examen.slug %}" class="button">Détails</a>
+                        <a href="{% url 'notes_et_moyennes_examen' examen.slug %}" class="button">Résultats</a>
+                    {% elif user.is_lecturer %}
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'examen_detail' examen.slug %}">Détails</a></li>
+                                <li><a class="dropdown-item" href="{% url 'notes_et_moyennes_examen' examen.slug %}">Résultats</a></li>
+                            </ul>
+                        </div>
                     {% else %}
-                        <span>Examen non disponible</span>
+                        <div class="dropdown">
+                            <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-ellipsis-vertical"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'examen_detail' examen.slug %}">Détails</a></li>
+                                <li><a class="dropdown-item" href="{% url 'examen_update' examen.slug %}">Modifier</a></li>
+                                <li><a class="dropdown-item" href="{% url 'examen_delete' examen.slug %}">Supprimer</a></li>
+                            </ul>
+                        </div>
                     {% endif %}
-                {% elif user.is_lecturer %}
-                <a href="{% url 'examen_detail' examen.slug %}">Détails</a>
-                {% else %}
-                    <div class="dropdown">
-                        <button class="btn btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-ellipsis-vertical"></i>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url 'examen_detail' examen.slug %}">Détails</a></li>
-                          <li><a href="{% url 'examen_update' examen.slug %}">Modifier</a></li>
-                          <li><a href="{% url 'examen_delete' examen.slug %}">Supprimer</a></li>
-                          <li><a href="{% url 'examen_activation' examen.id %}" class="btn btn-warning">
-                            {% if examen.is_active %}
-                                Désactiver l'examen
-                            {% else %}
-                                Activer l'examen
-                            {% endif %}
-                        </a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-                
-                
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

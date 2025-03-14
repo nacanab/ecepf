@@ -21,7 +21,7 @@
                     <li>{{ student_name|title }}</li>
                     <li><strong>{% trans 'Dernière connexion:' %} </strong>{{ student.student.last_login|date }}</li>
                     <li><strong>{% trans 'Rôle:' %} </strong>
-                        {% trans 'Etudiant' %}
+                        {% trans 'Elève' %}
                     </li>
                 </ul>
             </div>
@@ -40,7 +40,7 @@
                     {% endfor %}
                 </ul>
                 {% else %}
-                <div class="text-danger">{% trans 'Pas de cours pour l'instant' %}</div>
+                <div class="text-danger">{% trans "Pas de cours pour l'instant" %}</div>
                 {% endif %}
                 <hr>
 
@@ -52,10 +52,20 @@
                 </div>
 
                 <hr>
-                <p class="fw-bold"><i class="me-2 fas fa-graduation-cap"></i>{% trans 'Student Info' %}</p>
-                <div class="dashboard-description">
-                    <p><strong>{% trans 'Program:' %} </strong>{{ student.program.title }}</p>
-                </div>
+                <p class="fw-bold"><i class="fas fa-medal"></i> {% trans 'Badges' %}</p>
+                    <ul>
+                        {%if badges %}
+                        {% for attribution in badges %}
+                            <li>
+                                <strong>{{ attribution.badge.nom }}</strong> - {{ attribution.badge.description }}
+                                <img src="{{ attribution.badge.image.url }}" alt="{{ attribution.badge.nom }}" width="50" height="50">
+                                <small>(Obtenu le {{ attribution.date_attribution }})</small>
+                            </li>
+                        {% endfor %}
+                        {% else %}
+                            <div class="text-danger">Vous n'avez aucun badge</div>
+                        {% endif %}
+                    </ul>
 
                 <hr>
                 <p class="fw-bold"><i class="me-2 fas fa-phone-square-alt"></i>{% trans 'Contact Info' %}</p>
@@ -72,7 +82,7 @@
                     {% if current_semester and current_session %}
                     <p><strong>{% trans 'Année académique:' %}</strong> {{ current_semester }} {% trans 'Semester' %} {{ current_session }}</p>
                     {% endif %}
-                    <p><strong>{% trans Date d'inscription:' %}</strong> {{ student.student.date_joined|date }}</p>
+                    <p><strong>{% trans "Date d'inscription:" %}</strong> {{ student.student.date_joined|date }}</p>
                 </div>
             </div>
         </div>

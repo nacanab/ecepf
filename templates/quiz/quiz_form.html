@@ -6,16 +6,14 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'programs' %}">{% trans 'Programs' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'program_detail' course.program.id %}">{{ course.program }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
         <li class="breadcrumb-item"><a href="{{ course.get_absolute_url }}">{{ course }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">{% trans 'Quizzes' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans 'Quiz Form' %}</li>
+        <li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">Quizzes</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Formulaire</li>
     </ol>
 </nav>
 
-<div class="title-1">{% trans 'Quiz form for' %} {{ course|truncatechars:15 }}</div>
+<div class="title-1">{% trans 'Formulaire de quiz pour' %} {{ course|truncatechars:15 }}</div>
 <br><br>
 
 <div class="container">
@@ -55,15 +53,13 @@
                             <small class="d-block text-muted">{% trans 'Hold down' %} "Control", {% trans 'or' %} "Command" {% trans 'on a Mac, to select more than one.' %}</small>
                         </div>
                         {{ form.random_order|as_crispy_field }}                    
-                        {{ form.answers_at_end|as_crispy_field }}                    
-                        {{ form.exam_paper|as_crispy_field }}                    
-                        {{ form.single_attempt|as_crispy_field }}                    
-                        {{ form.draft|as_crispy_field }}             
+                        {{ form.answers_at_end|as_crispy_field }}                                
+                        {{ form.single_attempt|as_crispy_field }}                          
                     </div>
                 </div>
             </div>
         </div>
-        <button class="btn btn-primary my-4" id="{% if form.is_valid %}btn-transition{% endif %}" type="submit">{% trans 'Save' %} &amp; {% trans 'Continue' %}</button>
+        <button class="btn btn-primary my-4" id="{% if form.is_valid %}btn-transition{% endif %}" type="submit">{% trans 'Sauvegarder' %} &amp; {% trans 'Continuer' %}</button>
     </form>
 </div>
 

@@ -72,7 +72,7 @@
     <h1>Ajouter une réponse</h1>
     <p><strong>Question :</strong> {{ question.content }}</p>
 
-    <form method="post" class="response-form">
+    <form method="post" class="response-form" >
         {% csrf_token %}
         
         <!-- Champ : Contenu de la réponse -->

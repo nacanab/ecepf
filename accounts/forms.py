@@ -438,22 +438,23 @@ class ParentAddForm(UserCreationForm):
         label="Adresse mail",
     )
 
-    student = forms.ModelChoiceField(
-        queryset=Student.objects.all(),
-        widget=forms.Select(
-            attrs={"class": "browser-default custom-select form-control"}
+    student_username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "type": "text",
+                "class": "form-control",
+            },
         ),
-        label="Etudiant",
+        label="Nom d'utilisateur de l'étudiant",
     )
-
-    student_password=forms.CharField(
+    student_password = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "type": "password",
                 "class": "form-control",
             },
         ),
-        label="Mot de passe de l'etudiant",
+        label="Mot de passe de l'étudiant",
     )
 
     relation_ship = forms.CharField(
@@ -495,7 +496,7 @@ class ParentAddForm(UserCreationForm):
         model = User
 
     @transaction.atomic()
-    def save(self):
+    def save(self,commit=True):
         user = super().save(commit=False)
         user.is_parent = True
         user.first_name = self.cleaned_data.get("first_name")
@@ -503,11 +504,21 @@ class ParentAddForm(UserCreationForm):
         user.address = self.cleaned_data.get("address")
         user.phone = self.cleaned_data.get("phone")
         user.email = self.cleaned_data.get("email")
-        user.save()
+        if commit:
+            user.save()
+            user.save()  # Sauvegarder l'utilisateur si commit=True
+
+        # Récupérer l'étudiant associé
+        student_username = self.cleaned_data.get("student_username")
+        student_user = User.objects.get(username=student_username)
+        student = student_user.student
+
+        # Créer le parent
         parent = Parent.objects.create(
             user=user,
-            student=self.cleaned_data.get("student"),
+            student=student,
             relation_ship=self.cleaned_data.get("relation_ship"),
         )
         parent.save()
+
         return user

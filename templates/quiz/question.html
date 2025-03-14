@@ -2,18 +2,15 @@
 {% load i18n%}
 
 
-{% block title %} {{ quiz.title }} | {% trans 'Learning management system' %} {% endblock %}
-{% block description %} {{ quiz.title }} - {{ quiz.description }} {% endblock %}
+{% block title %} {{ quiz.title }} | eCEP {% endblock %}
 
 {% block content %}
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-		<li class="breadcrumb-item"><a href="{% url 'programs' %}">Programs</a></li>
-		<li class="breadcrumb-item"><a href="{% url 'program_detail' course.program.id %}">{{ course.program }}</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
 		<li class="breadcrumb-item"><a href="{{ course.get_absolute_url }}">{{ course }}</a></li>
-		<li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">{% trans 'Quizzes' %}</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">Quizzes</a></li>
 		<li class="breadcrumb-item active" aria-current="page">{{ quiz.title|title }}</li>
 	</ol>
 </nav>
@@ -25,7 +22,7 @@
 
 	{% if previous.answers %}
 
-	<p class="muted"><small>{% trans "The previous question" %}:</small></p>
+	<p class="muted"><small>{% trans "Question précédente" %}:</small></p>
 	<p>{{ previous.previous_question }}</p>
 
 	{% if previous.previous_outcome %}
@@ -34,7 +31,7 @@
 		<div class="alert alert-warning">
 	{% endif %}
 		<p class="mb-0"><small>
-			{% trans "Your answer was" %} </small>
+			{% trans "La réponse était" %} </small>
 			<strong>
 			{{ previous.previous_outcome|yesno:"correct,incorrect" }}
 			</strong>
@@ -50,7 +47,7 @@
                 {% if answer.correct %}
                   <tr class="success">
                     <td>{{ answer }}</td>
-                  <td class="text-success"><strong>{% trans "This is the correct answer" %}</strong></td>
+                  <td class="text-success"><strong>{% trans "Voici la bonne réponse" %}</strong></td>
 				  </tr>
                 {% else %}
                   <tr>
@@ -58,7 +55,7 @@
                     <td>
                     {% if previous.question_type.MCQuestion %}
                       {% if answer.id|add:"0" == previous.previous_answer|add:"0" %}
-                        {% trans "This was your answer." %}
+                        {% trans "Voici votre réponse." %}
                       {% endif %}
                     {% endif %}
                     </td>
@@ -70,7 +67,7 @@
 
           {% if user_was_incorrect %}
             <div class="text-danger">
-              <strong>{% trans "You answered the above question incorrectly" %}</strong>
+              <strong>{% trans "Vous avez mal répondu à la question" %}</strong>
             </div>
           {% endif %}
 
@@ -82,7 +79,7 @@
           {% if previous.previous_question.explanation %}
             {{ previous.previous_question.explanation }}
           {% else %}
-            {% trans "No explanation set to this question." %}
+            {% trans "Aucune explication pour cette question." %}
           {% endif %}
 		</p>
 		
@@ -105,17 +102,16 @@
 		<div class="modal-dialog">
 		  <div class="modal-content">
 			<div class="modal-header">
-			  <h1 class="modal-title fs-5" id="instractionModalLabel">{% trans 'Quiz instractions' %}</h1>
+			  <h1 class="modal-title fs-5" id="instractionModalLabel">{% trans 'Soumission au quiz' %}</h1>
 			  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				{% blocktrans %} 
-				You can't go back to the previous question after you submit it, 
-				so double check your answer before proceeding to the next one!
+					Vous pouvez voir les réponses précédentes donc vérifiez bien vos réponses.
 				{% endblocktrans %}
 			</div>
 			<div class="modal-footer">
-			  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{% trans 'Understood' %}</button>
+			  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">{% trans 'Compris' %}</button>
 			</div>
 		  </div>
 		</div>
@@ -129,8 +125,14 @@
 	{% endif %}
 
 	<p>
-		<small class="muted">{% trans "Quiz category" %}:</small>
-		<strong>{{ quiz.category }}</strong>
+		<small class="muted">{% trans "Catégorie de quiz" %}:</small>
+		<strong>
+			{% if quiz.category is 'pratical' %}
+                            Pratique
+                        {% else %}
+                            Devoir
+			{% endif %}
+		</strong>
 	</p>
 
 	<div class="card">
@@ -155,7 +157,7 @@
 
 				</ul>
 				<br>
-				<input type="submit" value="Check" class="btn btn-large btn-block btn-primary" />
+				<input type="submit" value="Vérifier" class="btn btn-large btn-block btn-primary" />
 				<!-- <input type="submit" value={% trans "Previous" %} class="btn btn-large btn-block btn-outline-primary" > -->
 			</form>
 		</div>

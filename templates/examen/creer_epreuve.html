@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Créer une epreuve | eCEP {% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #eef2f7;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .container1 {
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    #form1 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .button {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .button:hover {
+        background: linear-gradient(135deg, #5a4cd1, #8c82f8);
+    }
+</style>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Examen</li>
+      <li class="breadcrumb-item active" aria-current="page">Ajouter une epreuve</li>
+    </ol>
+</nav>
+
+<form method="post" class="container1" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Créer</button>
+</form>
+<a href="{% url 'examen_detail' examen.slug %}" class="btn btn-secondary">Annuler</a>
+{% endblock %}

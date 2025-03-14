@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% block title %}{% trans "All Quizzes" %} | {% trans 'Learning management system' %}{% endblock %}
+{% block title %}Tous les quizzes | eCEP {% endblock %}
 
 {% block content %}
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
+		<li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
 		<li class="breadcrumb-item active" aria-current="page">{% trans 'Complete Exams' %}</li>
 	</ol>
 </nav>

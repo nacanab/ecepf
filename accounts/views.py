@@ -102,10 +102,9 @@ def register(request,role):
             form = ParentAddForm(request.POST)
             if form.is_valid():
                 a=1
-                if form.cleaned_data.get("student").student.check_password(form.cleaned_data.get("student_password")):
-                    form.save()
-                    messages.success(request, "Compte créé avc succès.")
-                    return redirect("login")
+                form.save()
+                messages.success(request, "Compte créé avc succès.")
+                return redirect("login")
             if a==0:
                 messages.error(
                     request, "Assurez-vous que tout les champs sont bien remplis"
@@ -201,10 +200,10 @@ def child_profile(request):
     
     # Récupérer l'étudiant (enfant) associé à ce parent
     student = parent.student
+    badges=AttributionBadge.objects.filter(student=student)
     
     # Récupérer les informations du profil de l'étudiant
     student_name = student.student.get_full_name
-    student_level = student.level
     student_gender = student.student.gender
     student_email = student.student.email
     student_phone = student.student.phone
@@ -218,7 +217,6 @@ def child_profile(request):
     context = {
         'title': f"Profil de {student_name}",
         'student_name': student_name,
-        'student_level': student_level,
         'student_gender': student_gender,
         'student_email': student_email,
         'student_phone': student_phone,
@@ -230,6 +228,7 @@ def child_profile(request):
         'courses': courses,
         'current_semester': current_semester,
         'current_session': current_session,
+        "badges":badges
 }
     
     return render(request, 'accounts/child_profile.html', context)

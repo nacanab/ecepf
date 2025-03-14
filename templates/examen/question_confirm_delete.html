@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Suppression de question | eCEP {% endblock %}
 {% block content %}
 
 <style>
@@ -72,11 +73,10 @@
     }
 </style>
 
-<h1>Delete Question</h1>
-<p>Are you sure you want to delete "{{ question.content }}"?</p>
+<p>Etes vous sûr de vouloir supprimer la question "{{ question.content }}"?</p>
 <form method="post">
     {% csrf_token %}
-    <button type="submit">Yes, delete</button>
+    <button type="submit">Oui, suppimer</button>
     <a href="{% url 'examen_detail' question.examen.slug %}">Cancel</a>
 </form>
 {% endblock %}

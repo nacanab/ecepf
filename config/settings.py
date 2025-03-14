@@ -47,7 +47,6 @@ REST_FRAMEWORK = {
 # Application definition
 
 DJANGO_APPS = [
-    "channels",
     "modeltranslation",  # Translation
     "jet.dashboard",
     "jet",
@@ -58,10 +57,6 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    "forum",
-    "mychatapp",
-    "examen",
-    "badges",
 ]
 
 # Third party apps
@@ -75,16 +70,20 @@ SERVE_FIREBASE_SW = True
 
 # Custom apps
 PROJECT_APPS = [
-    "core.apps.CoreConfig",
-    "accounts.apps.AccountsConfig",
-    "course.apps.CourseConfig",
-    "result.apps.ResultConfig",
-    "search.apps.SearchConfig",
-    "quiz.apps.QuizConfig",
-    "payments.apps.PaymentsConfig",
-    "chat.apps.ChatConfig",
-    "chatbot.apps.ChatbotConfig",
-    "dictionnary.apps.DictionaryConfig",
+    "core",
+    "accounts",
+    "course",
+    "result",
+    "search",
+    "quiz",
+    "payments",
+    "chat",
+    "chatbot",
+    "dictionnary",
+    "forum",
+    "mychatapp",
+    "examen",
+    "badges",
 
 ]
 
@@ -146,7 +145,7 @@ DATABASES = {
 
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "ecep1",
+        "NAME": "ecep",
         "USER": "postgres",
         "PASSWORD": "Nacanabo2004",
         "HOST": "localhost",

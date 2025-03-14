@@ -26,7 +26,6 @@ from core.models import Session, Semester
 from course.models import Course
 from accounts.models import Student
 from accounts.decorators import lecturer_required, student_required
-from .models import TakenCourse, Result
 
 
 CM = 2.54
@@ -48,7 +47,7 @@ def add_score(request):
     ).first()
 
     if not current_session or not current_semester:
-        messages.error(request, "Pas de trimestre actif.")
+        messages.error(request, "No active semester found.")
         return render(request, "result/add_score.html")
 
     # semester = Course.objects.filter(
@@ -189,7 +188,7 @@ def add_score_for(request, id):
             #     Result.objects.get_or_create(student=student.student, gpa=gpa,
             # semester=current_semester, level=student.student.level)
 
-        messages.success(request, "Enregistré avec succès! ")
+        messages.success(request, "Successfully Recorded! ")
         return HttpResponseRedirect(reverse_lazy("add_score_for", kwargs={"id": id}))
     return HttpResponseRedirect(reverse_lazy("add_score_for", kwargs={"id": id}))
 

@@ -74,11 +74,11 @@ class MCQuestionFormSet(forms.BaseInlineFormSet):
             "choice_text" in form.cleaned_data.keys() for form in valid_forms
         ]
         if not all(valid_choices):
-            raise forms.ValidationError("You must add a valid choice name.")
+            raise forms.ValidationError("Entrez un choix valide.")
 
         # If all forms are deleted, raise a validation error
         if len(valid_forms) < 2:
-            raise forms.ValidationError("You must provide at least two choices.")
+            raise forms.ValidationError("Il faut au moins deux choix.")
 
         # Check if at least one of the valid forms is marked as correct
         correct_choices = [
@@ -86,10 +86,10 @@ class MCQuestionFormSet(forms.BaseInlineFormSet):
         ]
 
         if not any(correct_choices):
-            raise forms.ValidationError("One choice must be marked as correct.")
+            raise forms.ValidationError("Au moins une réponse correcte.")
 
         if correct_choices.count(True) > 1:
-            raise forms.ValidationError("Only one choice must be marked as correct.")
+            raise forms.ValidationError("Un seul réponse doit être correcte.")
 
 
 MCQuestionFormSet = inlineformset_factory(

@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% block title %}Passer un examen | eCEP {% endblock %}
 {% include 'snippets/messages.html' %}
 {% block content %}
 <div class="container mt-5">
     <div class="text-center mb-4">
-        <h1 class="display-4 text-primary font-weight-bold">{{ examen.title }}</h1>
-        <p class="lead text-muted">{{ examen.description }}</p>
-            {% if examen.file %}
+        <h1 class="display-4 text-primary font-weight-bold">{{ epreuve.course.title }}</h1>
+        <p class="lead text-muted">{{ epreuve.description }}</p>
+            {% if epreuve.file %}
         <p>
         <a href="{{ examen.file.url }}" download>Télécharger le fichier d'examen</a>
         </p>

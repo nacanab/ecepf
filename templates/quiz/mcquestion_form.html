@@ -6,16 +6,14 @@
 
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'programs' %}">{% trans 'Programs' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'program_detail' course.program.id %}">{{ course.program }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
         <li class="breadcrumb-item"><a href="{{ course.get_absolute_url }}">{{ course }}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">{% trans 'Quizzes' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans 'MC Question Form' %}</li>
+        <li class="breadcrumb-item"><a href="{% url 'quiz_index' course.slug %}">Quizzes</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Formulaire</li>
     </ol>
 </nav>
 
-<div class="title-1 mb-3">{% trans 'Add questions' %} [{{ quiz_obj|truncatechars:15 }}]</div>
+<div class="title-1 mb-3">{% trans 'Ajouter des questions' %} [{{ quiz_obj|truncatechars:15 }}]</div>
 
 {% if formset.non_form_errors %}
 <div class="alert alert-danger">
@@ -38,7 +36,6 @@
                     {{ form.quiz }}
                 </div>
                 {{ form.content|as_crispy_field }}
-                {{ form.figure|as_crispy_field }}
                 {{ form.explanation|as_crispy_field }}
             </div>
             <div class="col mx-3 py-4 border bg-white">

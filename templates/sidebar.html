@@ -52,7 +52,7 @@
 			{% endif %}
 
 			{% if request.user.is_parent %}
-			<li class="{% if request.path == '/fr/parent_dashboard/' %}active{% endif %}">
+			<li class="{% if request.path == '/parent_dashboard/' %}active{% endif %}">
 				<a href="{% url 'parentdashboard' %}"><i class="fas fa-tachometer-alt"></i>{% trans 'Tableau de bord du parent' %}</a>
 			</li>
 			{% endif %}
@@ -70,7 +70,7 @@
 
 			{% if request.user.is_parent %}
 
-			<li class="{% if request.path == '/fr/accounts/child_profile/' %}active{% endif %}">
+			<li class="{% if request.path == '/accounts/child_profile/' %}active{% endif %}">
 				<a href="{% url 'child_profile' %}"><i class="fas fa-tachometer-alt"></i>{% trans "Profil de l'élève" %}</a>
 			</li>
 			{% endif %}
@@ -84,7 +84,7 @@
 			<li class="{% if request.path == stu %}active{% endif %}">
 				<a href="{% url 'student_list' %}"><i class="fas fa-user-graduate"></i>{% trans 'Elèves' %}</a>
 			</li>
-			<li class="{% if request.path == '/fr/accounts/parents/add/' %}active{% endif %}">
+			<li class="{% if request.path == '/accounts/parents/add/' %}active{% endif %}">
 				<a href="{% url 'add_parent' %}"><i class="fas fa-solid fa-user"></i>{% trans 'Enregistrer un parent' %}</a>
 			</li>
 			
@@ -100,16 +100,12 @@
 
 
 			{% if request.user.is_superuser or request.user.is_lecturer %}
-			<li class="{% if request.path == pro %}active{% endif %}">
+			<li class="{% if request.path == '/programs/courses/detail/' %}active{% endif %}">
 				<a href="{% url 'program_detail' %}"><i class="fas fa-book-open"></i>{% trans 'Cours' %}</a>
 			</li>
 			{% endif %}
 
-			{% if request.user.is_superuser or request.user.is_lecturer %}
-			<li class="{% if request.path == qce %}active{% endif %}">
-				<a href="{% url 'quiz_marking' %}"><i class="fas fa-check-double"></i>{% trans 'Examens completés' %}</a>
-			</li>
-			{% endif %}
+
 
 			{% if request.user.is_superuser %}
 			<li class="{% if request.path == qpr %}active{% endif %}">
@@ -119,7 +115,7 @@
 				<a href="{% url 'course_allocation_view' %}"><i class="fas fa-tasks"></i>{% trans 'Allocation des cours' %}</a>
 			</li>
 			
-			<li class="{% if request.path == cav %}active{% endif %}">
+			<li class="{% if request.path == '/accounts/lecturers_assignments/' %}active{% endif %}">
 				<a href="{% url 'lecturer_assign_list' %}"><i class="fas fa-solid fa-user-check"></i>{% trans "Assignation d'étudiants" %}</a>
 			</li>
 
@@ -153,28 +149,22 @@
 			<li class="{% if request.path == qpr %}active{% endif %}">
 				<a href="{% url 'quiz_progress' %}"><i class="fas fa-record-vinyl"></i>{% trans 'Progression' %}</a>
 			</li>
-			<li class="{% if request.path == vr %}active{% endif %}">
-				<a href="{% url 'grade_results' %}"><i class="fas fa-spell-check"></i>{% trans 'Résulats de grade' %}</a>
-			</li>
-			<li class="{% if request.path == ar %}active{% endif %}">
-				<a href="{% url 'ass_results' %}"><i class="fa fa-list-ol"></i> {% trans 'Assesment Results' %}</a>
-			</li>
 			<li class="{% if request.path == cr %}active{% endif %}">
-				<a href="{% url 'course_registration' %}"><i class="fas fa-plus"></i>{% trans 'Add' %} &amp; {% trans 'Drop Course' %}</a>
+				<a href="{% url 'course_registration' %}"><i class="fas fa-plus"></i>{% trans 'Ajouer' %} &amp; {% trans 'supprimer des cours' %}</a>
 			</li>
 			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list' %}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
 			</li>
-			<li class="{% if request.path == '/fr/dictionnary/dictionnary' %}active{% endif %}">
+			<li class="{% if request.path == '/dictionnary/dictionnary' %}active{% endif %}">
 				<a href="{% url 'word' %}"><i class="fas fa-book"></i>{% trans 'Dictionnaire' %}</a>
 			</li>
-			<li class="{% if request.path == '/fr/chatbot/chatbot' %}active{% endif %}">
+			<li class="{% if request.path == '/chatbot/chatbot' %}active{% endif %}">
 				<a href="{% url 'chatbot' %}"><i class=" fas fa-solid fa-robot"></i>{% trans 'Assistant IA' %}</a>
 			</li>
 			<li class="{% if request.path == '/mychatapp/' %}active{% endif %}">
 				<a href="{% url 'chat' %}"><i class="fas fa-comments"></i>{% trans 'Espace chat'%}</a>
 			</li>
-			<li class="{% if request.path == '/fr/forum/{{name}}' %}active{% endif %}">
+			<li class="{% if request.path == '/forum/{{name}}' %}active{% endif %}">
 				<a href="{% url 'rooms' %}"><i class="fas fa-solid fa-user-group"></i>{% trans 'Forum' %}</a>
 			</li>
 			{% endif %}

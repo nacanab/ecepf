@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Résultats d'examen | eCEP {% endblock %}
+{% block content %}
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Accueil</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Examen</li>
+        <li class="breadcrumb-item active" aria-current="page">Résultat de l'examen {{ examen.title }}</li>
+    </ol>
+</nav>
+
+
+{% include 'snippets/messages.html' %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Étudiant</th>
+            {% for epreuve in epreuves %}
+                <th>{{ epreuve.course.title }}</th>
+            {% endfor %}
+            <th>Moyenne</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for donnee in donnees_etudiants %}
+            <tr>
+                <td>{{ donnee.student.student.get_full_name }}</td>
+                {% for resultat in donnee.resultats %}
+                    <td>
+                        {% if resultat.resultat %}
+                            {{ resultat.resultat.score|default:"Non noté" }}
+                        {% else %}
+                            Non noté
+                        {% endif %}
+                    </td>
+                {% endfor %}
+                <td>{{ donnee.moyenne|default:"Non noté" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Les résultats ne sont pas encore disponibles.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

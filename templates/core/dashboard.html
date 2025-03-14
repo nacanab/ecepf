@@ -33,7 +33,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
 	<h1 class="title-1">{% trans 'Tableau de bord' %}</h1>
 </div>
-
+<p>{% trans 'Informations utilisateurs' %}</p>
 <div class="row users-count px-3">
 	<div class="col-6 col-md-3 mb-3 px-2">
 		<div class="card-count p-3">
@@ -62,7 +62,51 @@
 			</div>
 		</div>
 	</div>
+    <div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'Parents' %}
+				<h2>{{ parents_count }}</h2>
+			</div>
+		</div>
+	</div>
 </div>
+
+
+
+<p>{% trans 'Autres Informations' %}</p>
+<div class="row users-count px-3">
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-aqua"></i></h3>
+			<div class="text-right">
+				{% trans 'Fiches de cours / vidéos' %}
+				<h2>{{ fiches }}/{{ videos }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'Quizzes' %}
+				<h2>{{ quiz }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-red"></i></h3>
+			<div class="text-right">
+				{% trans 'Examens' %}
+				<h2>{{ examen }}</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 
 <div class="row px-2">
 	<div class="col-md-6 p-2">
@@ -71,49 +115,21 @@
 			<canvas id="traffic"></canvas>
 		</div>
 	</div>
-	<div class="col-md-6 p-2">
-		<div class="chart-wrap">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="enrollement"></canvas>
-		</div>
-	</div>
-	<div class="col-md-6 p-2">
-		<div class="chart-wrap">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="students_grade"></canvas>
-		</div>
-	</div>
+
 	<div class="col-md-6 p-2">
 		<div class="card w-100 h-100 p-3">
-			<h5>{% trans 'Latest activities' %}</h5>
+			<h5>{% trans 'Dernières activités' %}</h5>
 			<ul class="ps-2 small">
 				{% for log in logs %}
 				<li>{{ log.message }} <span class="text-muted">- {{ log.created_at }}</span></li>
 				{% empty %}
-				<li>{% trans 'No recent activity' %}</li>
+				<li>{% trans "Pas d'activité récente" %}</li>
 				{% endfor %}
 			</ul>
 		</div>
 	</div>
 </div>
 <br>
-<div class="bg-white p-3">
-	<h5 class="border-bottom pb-2">{% trans 'Démographie' %}</h5>
-	<div class="row">
-		<div class="col-md-4">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="gender"></canvas>
-		</div>
-		<div class="col-md-4">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="ethnicity"></canvas>
-		</div>
-		<div class="col-md-4">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="language"></canvas>
-		</div>
-	</div>
-</div>
 
 {% endif %}
 
@@ -561,8 +577,8 @@ $(document).ready(function () {
 
     const dataGender = {
         labels: [
-            gettext('Man'),
-            gettext('Women')
+            gettext('Garçons'),
+            gettext('Filles')
         ],
         datasets: [{
             label: gettext("Students Gender Dataset"),
@@ -583,76 +599,13 @@ $(document).ready(function () {
             plugins: {
                 title: {
                     display: true,
-                    text: gettext('Students Gender'),
+                    text: gettext('Genre des élèves'),
                     padding: 20
                 }
             }
         }
     });
 
-    const dataQualification = {
-        labels: [
-            gettext('PHD'),
-            gettext('Masters'),
-            gettext('BSc degree')
-        ],
-        datasets: [{
-            label: gettext("Lecturer Qualifications Dataset"),
-            data: [24, 30, 26],
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 193, 7)',
-            'rgb(54, 162, 235)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-    var ethnicity = document.getElementById('ethnicity');
-    var chart = new Chart(ethnicity, {
-        type: 'pie',
-        data: dataQualification,
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: gettext('Lecturer qualifications'),
-                    padding: 20
-                }
-            }
-        }
-    });
-
-    const dataLevels = {
-        labels: [
-            gettext('PHD'),
-            gettext('Masters'),
-            gettext('BSc degree')
-        ],
-        datasets: [{
-            label: gettext("Students level"),
-            data: [14, 30, 56],
-            backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(255, 193, 7)',
-            'rgb(54, 162, 235)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-    var language = document.getElementById('language');
-    var chart = new Chart(language, {
-        type: 'pie',
-        data: dataLevels,
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: gettext('Student levels'),
-                    padding: 20
-                }
-            }
-        }
-    });
 })
 
 </script>

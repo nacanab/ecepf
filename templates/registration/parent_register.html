@@ -120,10 +120,17 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="gender_id" class="form-label">{{ form.student.label }}</label>
+                            <label for="gender_id" class="form-label">{{ form.student_username.label }}</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light"><i class="fas fa-venus-mars"></i></span>
-                                {{ form.student }}
+                                {{ form.student_username }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender_id" class="form-label">{{ form.student_password.label }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="fas fa-key"></i></span>
+                                {{ form.student_password }}
                             </div>
                         </div>
                         <div class="mb-3">
@@ -133,13 +140,7 @@
                                 {{ form.relation_ship }}
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="program_id" class="form-label">{{ form.student_password.label }}</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="fas fa-book"></i></span>
-                                {{ form.student_password }}
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
