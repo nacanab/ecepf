@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}{% trans 'clé_activation | eCEP' %}{% endblock title %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la clé d'activation</title>
+</head>
+<body>
+    <h1>Clé d'activation générée</h1>
+    <p><strong>Clé d'activation :</strong> {{ activation_key }}</p>
+    <p><strong>Date d'expiration :</strong> {{ expires_at }}</p>
+    <a href="{% url 'home' %}">Retour</a>
+</body>
+</html>
+
+{% endblock content%}

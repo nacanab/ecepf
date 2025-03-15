@@ -133,6 +133,9 @@
 			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list' %}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
 			</li>
+			<li class="{% if request.path == '/activationkey/generate-activation-key/' %}active{% endif %}">
+				<a href="{% url 'generate_activation_key' %}"><i class="fas fa-solid fa-user-group"></i>{% trans "Générer une clé d'activation pour le mobile" %}</a>
+			</li>
 			{% endif %}
 
 			{% if request.user.is_lecturer %}
@@ -146,6 +149,9 @@
 
 			<li class="{% if request.path == '/examen/' %}active{% endif %}">
 				<a href="{% url 'examen_list'%}"><i class="fas fa-solid fa-file-pen"></i>{% trans 'Examens' %}</a>
+			</li>
+			<li class="{% if request.path == '/activationkey/generate-activation-key/' %}active{% endif %}">
+				<a href="{% url 'generate_activation_key' %}"><i class="fas fa-solid fa-user-group"></i>{% trans "Générer une clé d'activation pour le mobile" %}</a>
 			</li>
 			{% endif %}
 
@@ -170,6 +176,10 @@
 			</li>
 			<li class="{% if request.path == '/forum/{{name}}' %}active{% endif %}">
 				<a href="{% url 'rooms' %}"><i class="fas fa-solid fa-user-group"></i>{% trans 'Forum' %}</a>
+			</li>
+
+			<li class="{% if request.path == '/activationkey/generate-activation-key/' %}active{% endif %}">
+				<a href="{% url 'generate_activation_key' %}"><i class="fas fa-solid fa-user-group"></i>{% trans "Générer une clé d'activation pour le mobile" %}</a>
 			</li>
 			{% endif %}
 

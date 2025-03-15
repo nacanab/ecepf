@@ -196,4 +196,55 @@ def invoice_detail(request, slug):
         context={"invoice": Invoice.objects.get(invoice_code=slug)},
     )
 
+def ligdicash1(request):
+    try:
+        ligdicash.api_key = settings.LIGDICASH_KEY
+        ligdicash.auth_token = settings.LIGDICASH_TOKEN
+        ligdicash.platform = settings.LIGDICASH_PLATFORM
 
+        invoice = ligdicash.Invoice(
+            currency="xof",
+            description="Facture pour l'achat d'une licence sur eCEP",
+            customer_firstname=request.user.first_name,
+            customer_lastname=request.user.last_name,
+            customer_email=request.user.email,
+            store_name="eCEP",
+            store_website_url="eCEP.com",
+        )
+
+        # Ajouter des éléments(produit, service, etc) à la facture
+        invoice.add_item(
+            name="Licence",
+            description="Achat d'une licence",
+            quantity=1,
+            unit_price=100,
+        )
+
+        # Formater les parties de la date
+        year = datetime.now().strftime('%Y')  # Année sur 4 chiffres
+        month = datetime.now().strftime('%m')  # Mois sur 2 chiffres
+        day = datetime.now().strftime('%d')    # Jour sur 2 chiffres
+        hour = datetime.now().strftime('%H')   # Heure sur 2 chiffres (format 24h)
+        minute = datetime.now().strftime('%M') # Minute sur 2 chiffres
+
+        # Générer un nombre aléatoire entre 5 et 100 000
+        random_number = random.randint(5, 100000)
+
+        # Construire la chaîne custom_data
+        response = invoice.pay_with_redirection(
+            cancel_url='http://127.0.0.1:8000/activationkey/generate-activation-key/',
+            return_url='http://127.0.0.1:8000/activationkey/<str:activation_key>/<str:expires_at>/',
+            callback_url='http://127.0.0.1:8000/activationkey/generate-activation-key/',
+            custom_data={
+						  "transaction_id": f"LGD{year}{month}{day}.{hour}{minute}.C{random_number}",
+						}
+        )
+
+        if response.response_code == "00":
+            payment_url = response.response_text
+            return redirect(payment_url)
+        else:
+            return JsonResponse({"error": "Failed to create payment URL"}, status=400)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

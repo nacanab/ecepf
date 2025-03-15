@@ -1,12 +1,13 @@
+import logging
 from rest_framework import generics, status, views
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from .models import User, Student, Lecturer, Parent, DepartmentHead, UserSession, StudentLogs
 from .serializers import UserSerializer, StudentSerializer, LecturerSerializer, ParentSerializer, DepartmentHeadSerializer, UserSessionSerializer, StudentLogsSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny  # Ajoutez cette ligne pour importer AllowAny
 from rest_framework.authtoken.models import Token
 
+logger = logging.getLogger(__name__)
 
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]  # Autoriser l'accès sans authentification
@@ -27,7 +28,7 @@ class LoginAPIView(APIView):
 from rest_framework.permissions import IsAuthenticated, AllowAny  # Seuls les utilisateurs authentifiés peuvent se déconnecter
 
 class LogoutAPIView(APIView):
-    permission_classes = [IsAuthenticated]  # Seuls les utilisateurs authentifiés peuvent accéder à cette vue
+    permission_classes = [AllowAny]  # Seuls les utilisateurs authentifiés peuvent accéder à cette vue
 
     def post(self, request, *args, **kwargs):
         try:
@@ -54,12 +55,12 @@ from .serializers import (
 class UserListCreateView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class UserRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 # Vues pour Student
 class StudentListCreateView(generics.ListCreateAPIView):
@@ -89,6 +90,7 @@ class ParentListCreateView(generics.ListCreateAPIView):
     serializer_class = ParentSerializer
     permission_classes = [AllowAny]
 
+
 class ParentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Parent.objects.all()
     serializer_class = ParentSerializer
@@ -98,34 +100,34 @@ class ParentRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class DepartmentHeadListCreateView(generics.ListCreateAPIView):
     queryset = DepartmentHead.objects.all()
     serializer_class = DepartmentHeadSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class DepartmentHeadRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DepartmentHead.objects.all()
     serializer_class = DepartmentHeadSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 # Vues pour UserSession
 class UserSessionListCreateView(generics.ListCreateAPIView):
     queryset = UserSession.objects.all()
     serializer_class = UserSessionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class UserSessionRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserSession.objects.all()
     serializer_class = UserSessionSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 # Vues pour StudentLogs
 class StudentLogsListCreateView(generics.ListCreateAPIView):
     queryset = StudentLogs.objects.all()
     serializer_class = StudentLogsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 class StudentLogsRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = StudentLogs.objects.all()
     serializer_class = StudentLogsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
 # Vues supplémentaires
 class StudentCreateAPIView(APIView):
@@ -178,16 +180,35 @@ class LecturerListView(generics.ListAPIView):
 class LecturerDetailView(generics.RetrieveAPIView):
     queryset = Lecturer.objects.all()
     serializer_class = Lecturer    
+    permission_classes = [AllowAny]  # Ajustez selon vos besoins
     
 
 
 
+class ParentListView(generics.ListAPIView):
+    """
+    API endpoint to list all parents
+    """
+    queryset = Parent.objects.all()
+    serializer_class = ParentSerializer
+    permission_classes = [AllowAny]  # Adjust based on your security requirements
+
+
+class ParentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API endpoint to retrieve, update or delete a parent
+    """
+    queryset = Parent.objects.all()
+    serializer_class = ParentSerializer
+    permission_classes = [AllowAny]  # Adjust based on your security requirements
+
+
+
+
 # views_api.py
-from rest_framework import generics, status
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Parent
 from .serializers import ParentSerializer
 
 class ParentCreateAPIView(APIView):
@@ -195,43 +216,30 @@ class ParentCreateAPIView(APIView):
     API pour créer un nouveau parent.
     """
     permission_classes = [AllowAny]  # Changer selon vos besoins de sécurité
-
+    
     def post(self, request, *args, **kwargs):
+        # Débogage - afficher les données reçues
+        print(f"Données reçues: {request.data}")
+        
         serializer = ParentSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 parent = serializer.save()
                 return Response({
                     'status': 'success',
-                    'message': f'Compte parent créé avec succès pour {parent.user.get_full_name()}',
+                    'message': f'Compte parent créé avec succès pour {parent.user.get_full_name}',
                     'user_id': parent.user.id,
                     'email': parent.user.email,
                     'student_id': parent.student.id
                 }, status=status.HTTP_201_CREATED)
             except Exception as e:
+                print(f"Erreur lors de la création du parent: {str(e)}")
                 return Response({
                     'status': 'error',
                     'message': str(e)
                 }, status=status.HTTP_400_BAD_REQUEST)
+        print(f"Erreurs de validation: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class ParentListView(generics.ListAPIView):
-    """
-    Liste de tous les parents.
-    """
-    queryset = Parent.objects.all()
-    serializer_class = ParentSerializer
-    permission_classes = [AllowAny]
-
-class ParentDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    Détails, mise à jour et suppression d'un parent.
-    """
-    queryset = Parent.objects.all()
-    serializer_class = ParentSerializer
-    permission_classes = [AllowAny]
-
-
 
 #Pour le profile
 from rest_framework.views import APIView
@@ -269,3 +277,32 @@ class MyProfileAPIView(APIView):
         # Utilisez l'utilisateur de la requête (authentifié)
         serializer = ProfileSerializer(request.user)
         return Response(serializer.data)
+    
+# views_api.py
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import PasswordResetSerializer
+
+# Dans votre views_api.py
+class PasswordResetView(APIView):
+    def post(self, request):
+        # Ajouter des logs pour déboguer
+        print(f"Données reçues: {request.data}")
+        
+        serializer = PasswordResetSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                return Response(
+                    {"detail": "Un email de réinitialisation a été envoyé si un compte avec cette adresse existe."},
+                    status=status.HTTP_200_OK
+                )
+            except Exception as e:
+                # Logger l'erreur pour le débogage
+                print(f"Erreur lors de l'envoi de l'email: {str(e)}")
+                return Response(
+                    {"detail": "Erreur lors de l'envoi de l'email"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

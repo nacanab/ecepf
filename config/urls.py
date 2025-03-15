@@ -30,8 +30,9 @@ urlpatterns = [
     path('mychatapp/', include("mychatapp.urls")),
     path('examen/', include("examen.urls")),
     path('badges/', include("badges.urls")),
+    path('activationkey/', include("activationkey.urls")),
     path('api_accounts/', include('accounts.urls_api')),
-    
+    path('api_activationkey/', include('activationkey.urls_api')),
     
     
     # flutter connexion

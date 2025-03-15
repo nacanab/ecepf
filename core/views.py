@@ -58,7 +58,7 @@ def dashboard_view(request):
 @lecturer_required
 def lecturer_dashboard_view(request):
     lecturer = Lecturer.objects.get(user=request.user)
-    course_count=CourseAllocation.objects.count()
+    course_count=CourseAllocation.objects.filter(lecturer=lecturer).count()
     logs = ActivityLog.objects.all().order_by("-created_at")[:10]
     males_count=lecturer.get_male_count()
     females_count=lecturer.get_female_count()
@@ -70,6 +70,10 @@ def lecturer_dashboard_view(request):
         "males_count": males_count,
         "females_count": females_count,
         "logs": logs,
+        "fiches":Upload.objects.all().count(),
+        "videos":UploadVideo.objects.all().count(),
+        "quiz":Quiz.objects.all().count(),
+        "examen":Examen.objects.all().count(),
     }
     return render(request, "core/dashboard.html", context)
 

@@ -44,7 +44,7 @@ def examen_create(request):
                     notification_body = f"Un nouvel examen a été ajouté: {examen.title}. Tenez-vous près"
                     send_push_notification(token, notification_title, notification_body)
             form.save_m2m()  # Sauvegarder les cours associés
-            messages.success(request, "Exam created successfully!")
+            messages.success(request, "Examen créé avec succès!")
             return redirect("examen_detail", slug=examen.slug)
     else:
         form = ExamenForm()
@@ -58,7 +58,7 @@ def examen_update(request, slug):
         form = ExamenForm(request.POST, instance=examen)
         if form.is_valid():
             form.save()
-            messages.success(request, _("Exam updated successfully!"))
+            messages.success(request, _("Examen modifié avec succès!"))
             return redirect("examen_detail", slug=examen.slug)
     else:
         form = ExamenForm(instance=examen)
@@ -108,7 +108,7 @@ def epreuve_update(request, epreuve_id):
         form = EpreuveForm(request.POST, instance=epreuve)
         if form.is_valid():
             form.save()
-            messages.success(request, _("Epreuve updated successfully!"))
+            messages.success(request, _("Epreuve modifié avec succès!"))
             return redirect('examen_detail', slug=epreuve.examen.slug)
     else:
         form = EpreuveForm(instance=epreuve)
@@ -130,7 +130,7 @@ def examen_delete(request, slug):
     examen = get_object_or_404(Examen, slug=slug)
     if request.method == "POST":
         examen.delete()
-        messages.success(request, _("Exam deleted successfully!"))
+        messages.success(request, _("Examen supprimé avec succès!"))
         return redirect("examen_list")
     return render(request, "examen/examen_confirm_delete.html", {"examen": examen})
 
@@ -143,7 +143,7 @@ def question_create(request, epreuve_id):
             question = form.save(commit=False)
             question.epreuve = epreuve
             question.save()
-            messages.success(request, "Question added successfully!")
+            messages.success(request, "Question ajouté avec succès!")
             return redirect("reponse_create", question.id)
     else:
         form = QuestionExamenForm()
@@ -161,7 +161,7 @@ def question_update(request, question_id):
         form = QuestionExamenForm(request.POST, instance=question)
         if form.is_valid():
             form.save()
-            messages.success(request, _("Question updated successfully!"))
+            messages.success(request, _("Question modifié avec succès!"))
             return redirect("examen_detail", slug=question.examen.slug)
     else:
         form = QuestionExamenForm(instance=question)
@@ -174,7 +174,7 @@ def question_delete(request, question_id):
     examen_slug = question.examen.slug
     if request.method == "POST":
         question.delete()
-        messages.success(request, _("Question deleted successfully!"))
+        messages.success(request, _("Question supprimé avec succès!"))
         return redirect("examen_detail", slug=examen_slug)
     return render(request, "examen/question_confirm_delete.html", {"question": question})
 
@@ -189,7 +189,7 @@ def reponse_create(request, question_id):
             reponse = form.save(commit=False)
             reponse.question = question
             reponse.save()
-            messages.success(request, _("Answer added successfully!"))
+            messages.success(request, _("Réponse ajouté avec succès!"))
             return redirect("examen_detail", slug=question.epreuve.examen.slug)
         else:
             print(form.errors)
@@ -205,7 +205,7 @@ def reponse_update(request, reponse_id):
         form = ReponseExamenForm(request.POST, instance=reponse)
         if form.is_valid():
             form.save()
-            messages.success(request, _("Answer updated successfully!"))
+            messages.success(request, _("Réponse modifié avec succès!"))
             return redirect("examen_detail", slug=reponse.question.examen.slug)
     else:
         form = ReponseExamenForm(instance=reponse)
@@ -218,7 +218,7 @@ def reponse_delete(request, reponse_id):
     examen_slug = reponse.question.examen.slug
     if request.method == "POST":
         reponse.delete()
-        messages.success(request, _("Answer deleted successfully!"))
+        messages.success(request, _("Réponse supprimé avec succès!"))
         return redirect("examen_detail", slug=examen_slug)
     return render(request, "examen/reponse_confirm_delete.html", {"reponse": reponse})
 

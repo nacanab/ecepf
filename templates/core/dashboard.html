@@ -184,23 +184,42 @@
 	</div>
 </div>
 
+<p>{% trans 'Autres Informations' %}</p>
+<div class="row users-count px-3">
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-aqua"></i></h3>
+			<div class="text-right">
+				{% trans 'Fiches de cours / vidéos' %}
+				<h2>{{ fiches }}/{{ videos }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-orange"></i></h3>
+			<div class="text-right">
+				{% trans 'Quizzes' %}
+				<h2>{{ quiz }}</h2>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 col-md-3 mb-3 px-2">
+		<div class="card-count p-3">
+			<h3><i class="fas fa-users bg-light-red"></i></h3>
+			<div class="text-right">
+				{% trans 'Examens' %}
+				<h2>{{ examen }}</h2>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="row px-2">
 	<div class="col-md-6 p-2">
 		<div class="chart-wrap">
 			<i class="fas fa-expand-alt"></i>
 			<canvas id="traffic"></canvas>
-		</div>
-	</div>
-	<div class="col-md-6 p-2">
-		<div class="chart-wrap">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="enrollement"></canvas>
-		</div>
-	</div>
-	<div class="col-md-6 p-2">
-		<div class="chart-wrap">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="students_grade"></canvas>
 		</div>
 	</div>
 	<div class="col-md-6 p-2">
@@ -210,7 +229,7 @@
 				{% for log in logs %}
 				<li>{{ log.message }} <span class="text-muted">- {{ log.created_at }}</span></li>
 				{% empty %}
-				<li>{% trans 'No recent activity' %}</li>
+				<li>{% trans "Pas d'activité recentes" %}</li>
 				{% endfor %}
 			</ul>
 		</div>
@@ -223,14 +242,6 @@
 		<div class="col-md-4">
 			<i class="fas fa-expand-alt"></i>
 			<canvas id="gender"></canvas>
-		</div>
-		<div class="col-md-4">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="ethnicity"></canvas>
-		</div>
-		<div class="col-md-4">
-			<i class="fas fa-expand-alt"></i>
-			<canvas id="language"></canvas>
 		</div>
 	</div>
 </div>

@@ -60,11 +60,11 @@ class CourseManager(models.Manager):
 
 class Course(models.Model):
     slug = models.SlugField(unique=True, blank=True)
-    title = models.CharField(max_length=200)
-    code = models.CharField(max_length=200, unique=True)
-    credit = models.IntegerField(default=1,blank=True)
-    summary = models.TextField(max_length=200, blank=True)
-    semester = models.CharField(choices=settings.SEMESTER_CHOICES, max_length=200)
+    title = models.CharField(max_length=200,verbose_name=_('Titre'))
+    code = models.CharField(max_length=200, unique=True,verbose_name=_('Code'))
+    credit = models.IntegerField(default=1,blank=True,)
+    summary = models.TextField(max_length=200, blank=True,verbose_name=_('Résumé'))
+    semester = models.CharField(choices=settings.SEMESTER_CHOICES, max_length=200,verbose_name=_('Trimestre'))
     is_elective = models.BooleanField(default=False)
 
     objects = CourseManager()
@@ -90,13 +90,13 @@ def course_pre_save_receiver(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Course)
 def log_course_save(sender, instance, created, **kwargs):
-    verb = "created" if created else "updated"
-    ActivityLog.objects.create(message=_(f"The course '{instance}' has been {verb}."))
+    verb = "créé" if created else "mis à jour"
+    ActivityLog.objects.create(message=_(f"Le cours '{instance}' a été {verb}."))
 
 
 @receiver(post_delete, sender=Course)
 def log_course_delete(sender, instance, **kwargs):
-    ActivityLog.objects.create(message=_(f"The course '{instance}' has been deleted."))
+    ActivityLog.objects.create(message=_(f"Le cours '{instance}' a été supprimé."))
 
 
 class CourseAllocation(models.Model):
@@ -173,11 +173,11 @@ class Upload(models.Model):
 def log_upload_save(sender, instance, created, **kwargs):
     if created:
         message = _(
-            f"The file '{instance.title}' has been uploaded to the course '{instance.course}'."
+            f"Le fichier '{instance.title}' a été ajouté au cours '{instance.course}'."
         )
     else:
         message = _(
-            f"The file '{instance.title}' of the course '{instance.course}' has been updated."
+            f"Le fichier '{instance.title}' du cours '{instance.course}' a été modifié."
         )
     ActivityLog.objects.create(message=message)
 
@@ -186,7 +186,7 @@ def log_upload_save(sender, instance, created, **kwargs):
 def log_upload_delete(sender, instance, **kwargs):
     ActivityLog.objects.create(
         message=_(
-            f"The file '{instance.title}' of the course '{instance.course}' has been deleted."
+            f"Le fichier '{instance.title}' du cours '{instance.course}' a été supprimé."
         )
     )
 
@@ -228,11 +228,11 @@ def video_pre_save_receiver(sender, instance, **kwargs):
 def log_uploadvideo_save(sender, instance, created, **kwargs):
     if created:
         message = _(
-            f"The video '{instance.title}' has been uploaded to the course '{instance.course}'."
+            f"La vidéo '{instance.title}' a été ajouté au cours '{instance.course}'."
         )
     else:
         message = _(
-            f"The video '{instance.title}' of the course '{instance.course}' has been updated."
+            f"La vidéo '{instance.title}' du cours '{instance.course}' a été modifiée."
         )
     ActivityLog.objects.create(message=message)
 
@@ -241,7 +241,7 @@ def log_uploadvideo_save(sender, instance, created, **kwargs):
 def log_uploadvideo_delete(sender, instance, **kwargs):
     ActivityLog.objects.create(
         message=_(
-            f"The video '{instance.title}' of the course '{instance.course}' has been deleted."
+            f"La vidéo '{instance.title}' du cours '{instance.course}' a été supprimée."
         )
     )
 
