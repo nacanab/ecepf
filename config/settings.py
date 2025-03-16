@@ -26,9 +26,9 @@ SECRET_KEY = config(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", default=True, cast=bool)
+DEBUG = False
 
-ALLOWED_HOSTS = ["127.0.0.1","localhost","192.168.100.8","192.168.11.108","192.168.11.104"]
+ALLOWED_HOSTS = ["https://ecepf-2.onrender.com"]
 
 # change the default user models to our custom model
 AUTH_USER_MODEL = "accounts.User"
