@@ -150,18 +150,12 @@ ASGI_APPLICATION = 'config.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+import os
+import dj_database_url
 
 DATABASES = {
-
-     "default": {
-         "ENGINE": "django.db.backends.postgresql",
-         "NAME": "ecep2",
-         "USER": "postgres",
-         "PASSWORD": "Nacanabo2004",
-         "HOST": "localhost",
-         "PORT": "5432",
-     }
- }
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
+}
 
 
 
