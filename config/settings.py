@@ -28,7 +28,7 @@ SECRET_KEY = config(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://ecepf-2.onrender.com"]
+ALLOWED_HOSTS = [".onrender.com"]
 
 # change the default user models to our custom model
 AUTH_USER_MODEL = "accounts.User"
