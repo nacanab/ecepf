@@ -232,9 +232,9 @@ def ligdicash1(request):
 
         # Construire la chaîne custom_data
         response = invoice.pay_with_redirection(
-            cancel_url='http://127.0.0.1:8000/activationkey/generate-activation-key/',
-            return_url='http://127.0.0.1:8000/activationkey/<str:activation_key>/<str:expires_at>/',
-            callback_url='http://127.0.0.1:8000/activationkey/generate-activation-key/',
+            cancel_url='https://ecepf-9.onrender.com/activationkey/generate-activation-key/',
+            return_url='https://ecepf-9.onrender.com//activationkey/<str:activation_key>/<str:expires_at>/',
+            callback_url='https://ecepf-9.onrender.com//activationkey/generate-activation-key/',
             custom_data={
 						  "transaction_id": f"LGD{year}{month}{day}.{hour}{minute}.C{random_number}",
 						}
