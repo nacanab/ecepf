@@ -69,7 +69,7 @@
             setInterval(function(){
                 $.ajax({
                     type: 'GET',
-                    url : "mychatapp/getchatMessages/{{room_id}}/",
+                    url : "/mychatapp/getchatMessages/{{room_id}}/",
                     success: function(response){
                         var isAtBottom = display.scrollTop() + display.innerHeight() >= display[0].scrollHeight;
                         display.empty();
@@ -102,7 +102,7 @@
             e.preventDefault();
             $.ajax({
                 type:'POST',
-                url:'mychatapp/send',
+                url:'/mychatapp/send',
                 data:{
                     username:$('#username').val(),
                     room_id:$('#room_id').val(),
